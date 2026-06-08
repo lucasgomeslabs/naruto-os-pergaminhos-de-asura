@@ -17,7 +17,7 @@ Nunca commitar antes da confirmação do usuário.
 ---
 
 ## Stack
-- GDScript, 2D platformer, uso pessoal (máquina única, sem distribuição)
+- GDScript, 2D platformer — distribuição: PC + Android + Web (renderer Compatibility, ship 720p 16:9, stretch keep, sprites espelham via flip_h)
 - Input: Teclado (WASD/Setas + J/K/O/Shift) — sem suporte a controle
 
 ---
@@ -36,9 +36,9 @@ Nunca commitar antes da confirmação do usuário.
 - `scripts/ui/` → debug_hud, dialogue_box
 - `assets/audio/` → Zabuza_laugh.wav
 - `assets/backgrounds/ichiraku/` → 3 frames teuchi_naruto_jiraya
-- `assets/backgrounds/akatsuki/` → 2 frames guedomazo (frame1 removido, swap via signal)
+- `assets/backgrounds/akatsuki/` → 2 frames guedomazo (FRAME_A/B atuais) + 3 novos aditivos akatsuki_01_intro/02_facepalm/03_kamui (1448×1086, p/ rewrite)
 - `assets/backgrounds/` → Vila_da_folha.png
-- `assets/sprites/` → Naruto_chakra_charge.png (aguarda integração no Player)
+- `assets/sprites/` → Naruto_chakra_charge.png (transparente) + naruto/ (13 sprites + alternates/ 18 — NÃO integrados na FSM)
 - `documentation/` → prints de validação
 
 ---
@@ -96,6 +96,9 @@ Nunca commitar antes da confirmação do usuário.
 - Akatsuki cutscene: abre com frame_a (Pain mão na cabeça), troca para frame_b na linha 2 ("Pain: Inesperado.")
 - Ichiraku é sub-scene da Zona 4 (não `change_scene_to_file`) — Player permanece na árvore
 - `exit_position` do KamuiTrigger = `Vector2(500, 0)` placeholder — ajustar quando Zona 2 for construída
+- **Distribuição (Sessão 8):** alvo PC + Android + Web; renderer Compatibility; ship 720p 16:9; stretch keep; sprites espelham via `flip_h`. (Substitui "uso pessoal, máquina única".)
+- **Cutscene Akatsuki — 3 beats (planejado, rewrite pendente):** intro (Pain olha) → facepalm ("Inacreditável", mão no rosto) → kamui (Tobi levanta a mão, expulsa Naruto). Beat 3 sincroniza com `KamuiTrigger`.
+- **ChakraSprite calibrado por imagem:** usa region-crop + scale por sprite. Sprite novo do Player NÃO é drop-in — exige recalibrar `region_rect`/`scale`.
 
 ---
 
@@ -107,6 +110,19 @@ Nunca commitar antes da confirmação do usuário.
 | 3 | zona_3_arvores_gigantes.tscn | ❌ não criada |
 | 4 | zona_4_aldeia_corredor.tscn | ❌ não criada (cutscene Ichiraku pronta pra encaixar) |
 | 5 | zona_5_lago.tscn | 🟡 floresta_da_nevoa.tscn (renomear, cutscene Akatsuki pronta pra encaixar) |
+
+---
+
+## Commits desta sessão (Sessão 8)
+- `Feat: assets Naruto (primary+alternates) + chakra transparente + recalibra ChakraSprite`
+- `Feat: backgrounds cutscene Akatsuki (3 frames) — aditivo, rewrite pendente`
+- `Docs: atualiza CONTEXT.md sessão 8`
+
+### Entregue (Sessão 8)
+- `assets/sprites/naruto/` — 13 sprites do Naruto (idle, idle_kunai, stance_kunai, run, dash_start, punch, rasengan, shuriken_throw, kick_low, kick_high, kick_flying, land_impact) com fundo transparente. + `alternates/` (18: espelhados + 7 corridas redundantes). **Ainda NÃO integrados na FSM.**
+- `Naruto_chakra_charge.png` agora transparente (mesmo path `assets/sprites/`, sobrescrito in-place; `.import`/UID preservados).
+- `ChakraSprite` (`player.tscn`) recalibrado pro canvas novo 1672×941: `region_rect = Rect2(585,143,505,652)`, `scale = (0.16196,0.16196)`. Lição: ChakraSprite usa region-crop + scale calibrados por imagem — sprite novo do Player precisa desse ajuste, não é drop-in.
+- `assets/backgrounds/akatsuki/` — 3 frames novos (`akatsuki_01_intro`, `02_facepalm`, `03_kamui`, 1448×1086). Aditivos. `guedomazo_naruto2/3` continuam FRAME_A/B da cutscene atual.
 
 ---
 
@@ -151,7 +167,7 @@ Nunca commitar antes da confirmação do usuário.
 ---
 
 ## Pendências de integração (não-bloqueantes)
-- `assets/sprites/Naruto_chakra_charge.png` aguarda integração no Player (sem AnimatedSprite2D/Sprite2D ainda)
+- 13 sprites em `assets/sprites/naruto/` aguardam integração na FSM do Player (precisa da análise de render — ver Próximo bloco)
 - Renomear `floresta_da_nevoa.tscn` → `zona_5_lago.tscn` quando definir a Zona 5 final
 - Warning: signal `respawned` declarado em `player_controller.gd` mas nunca conectado (cleanup futura, não-bloqueante)
 - `exit_position` do KamuiTrigger (`Vector2(500, 0)`) é placeholder — revisar quando Zona 2 for construída
@@ -160,9 +176,12 @@ Nunca commitar antes da confirmação do usuário.
 
 ---
 
-## Próximo bloco
-A definir. Opções na mesa:
-- **TutorialTrigger Zona 2** (#07 — ver SUGESTOES.md): substituir JiraiyaTrigger AUTO por sistema que aguarda input correto antes de avançar instrução
-- **CollectibleSystem**: pergaminhos coletáveis (#02 Espadas, #03 Ramen, #04 Cobra, #05 Akatsuki, #06 Jiraiya — ver SUGESTOES.md)
-- **Chakra charge sprite**: integrar Naruto_chakra_charge.png ao Player (precisa AnimatedSprite2D ou TextureRect)
+## Próximo bloco — Sessão 9 (pendências explícitas)
+1. **Análise de render do Player** — mapear os 12 estados da FSM + como cada sprite é montado. Pré-requisito pra integrar os 13 sprites de `assets/sprites/naruto/`.
+2. **Rewrite cutscene Akatsuki 2→3 frames** + sync `KamuiTrigger` + aposentar `guedomazo_naruto2/3` ao migrar. Imagens 4:3, jogo 16:9 — resolver exibição (crop/pillarbox) no rewrite.
+3. **Padronizar canvas + pivô** dos sprites antes de animar. "Corridas" = 8 desenhos do mesmo instante, não um ciclo de animação.
+
+### Ainda na mesa (sessões anteriores)
+- **TutorialTrigger Zona 2** (#07 — ver SUGESTOES.md)
+- **CollectibleSystem** (#02–#06 — ver SUGESTOES.md)
 - **Zona 5**: renomear/finalizar floresta_da_nevoa.tscn
