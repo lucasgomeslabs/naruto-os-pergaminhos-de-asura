@@ -99,6 +99,7 @@ Nunca commitar antes da confirmação do usuário.
 - **Distribuição (Sessão 8):** alvo PC + Android + Web; renderer Compatibility; ship 720p 16:9; stretch keep; sprites espelham via `flip_h`. (Substitui "uso pessoal, máquina única".)
 - **Cutscene Akatsuki — 3 beats (planejado, rewrite pendente):** intro (Pain olha) → facepalm ("Inacreditável", mão no rosto) → kamui (Tobi levanta a mão, expulsa Naruto). Beat 3 sincroniza com `KamuiTrigger`.
 - **ChakraSprite calibrado por imagem:** usa region-crop + scale por sprite. Sprite novo do Player NÃO é drop-in — exige recalibrar `region_rect`/`scale`.
+- **Estilo visual definitivo (Sessão 9):** arte desenhada / cel-shaded. Tentativa de pixel art para cenários foi **descartada**.
 
 ---
 
@@ -110,6 +111,25 @@ Nunca commitar antes da confirmação do usuário.
 | 3 | zona_3_arvores_gigantes.tscn | ❌ não criada |
 | 4 | zona_4_aldeia_corredor.tscn | ❌ não criada (cutscene Ichiraku pronta pra encaixar) |
 | 5 | zona_5_lago.tscn | 🟡 floresta_da_nevoa.tscn (renomear, cutscene Akatsuki pronta pra encaixar) |
+
+---
+
+## Commits desta sessão (Sessão 9)
+- `Feat: backgrounds Ichiraku — arte nova (overwrite in-place dos 3 frames)`
+- `Fix: Ichiraku — enquadramento full-rect (KEEP_ASPECT_COVERED) + remove Ichiraku duplicado no test_stage`
+- `Docs: atualiza CONTEXT.md — sessão 9 (Ichiraku + Akatsuki + pendências)`
+
+### Entregue (Sessão 9)
+- **Backgrounds Ichiraku:** arte nova nos 3 frames (`teuchi_naruto_jiraya1/2/3`, overwrite in-place, 1672×941 16:9, UID/path preservados).
+- **Enquadramento Ichiraku corrigido:** `Background` full-rect + `stretch_mode = KEEP_ASPECT_COVERED`; removido `size`/`position` hardcoded do `_ready()` (era calibração da arte antiga 2.26:1).
+- **Bug corrigido:** `test_stage.tscn` tinha 2 Ichiraku (um aninhado no outro) — duplicata removida.
+- **Backgrounds Akatsuki:** verificado por hash que os 3 frames do commit B já são a versão final (com tochas) — **nenhuma mudança necessária**. Continuam não ligados à cutscene (segue usando `guedomazo`).
+
+### Pendências / divergências mapeadas (não-bloqueantes)
+- Saída do Ichiraku reposiciona o Player em `(-600,0)` (placeholder Zona 4). Sem Zona 4, cai no `test_stage` e toma dano de queda. Resolve quando a Zona 4 existir (trocar pela entrada real).
+- "Respawn parece Zona 1" é **falso-positivo**: vai pra `zona_2` corretamente (`RESPAWN_ZONE = zona_2`, zero referência a Zona 1 no código). A impressão vem do `jiraiya_intro` AUTO do placeholder da Zona 2.
+- `jiraiya_intro` re-dispara a cada respawn (`one_shot` não persiste entre reloads) — resolver com flag no SaveSystem quando a Zona 2 virar design real.
+- **Config divergente:** projeto está em **1152×648 + Forward Plus**, não 720p/Compatibility. Web exige Compatibility — alinhar antes de exportar pra Web/Android.
 
 ---
 
@@ -176,9 +196,9 @@ Nunca commitar antes da confirmação do usuário.
 
 ---
 
-## Próximo bloco — Sessão 9 (pendências explícitas)
+## Próximo bloco — Sessão 10 (pendências explícitas)
 1. **Análise de render do Player** — mapear os 12 estados da FSM + como cada sprite é montado. Pré-requisito pra integrar os 13 sprites de `assets/sprites/naruto/`.
-2. **Rewrite cutscene Akatsuki 2→3 frames** + sync `KamuiTrigger` + aposentar `guedomazo_naruto2/3` ao migrar. Imagens 4:3, jogo 16:9 — resolver exibição (crop/pillarbox) no rewrite.
+2. **Rewrite cutscene Akatsuki 2→3 frames** + sync `KamuiTrigger` + aposentar `guedomazo_naruto2/3` ao migrar — **fazer junto com a Zona 5** (a cutscene não tem como ser testada sem a cena da Zona 5 montada).
 3. **Padronizar canvas + pivô** dos sprites antes de animar. "Corridas" = 8 desenhos do mesmo instante, não um ciclo de animação.
 
 ### Ainda na mesa (sessões anteriores)
