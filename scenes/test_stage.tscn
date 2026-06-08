@@ -81,5 +81,3 @@ position = Vector2(700, 368)
 position = Vector2(0, 200)
 
 [node name="Ichiraku" parent="." unique_id=1303593420 instance=ExtResource("6_o24wk")]
-
-[node name="Ichiraku" parent="Ichiraku" unique_id=2118423840 instance=ExtResource("6_o24wk")]
