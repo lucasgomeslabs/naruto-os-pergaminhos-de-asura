@@ -34,9 +34,9 @@ color = Color(0.1, 0.1, 0.1, 1)
 [node name="ChakraSprite" type="Sprite2D" parent="."]
 texture = ExtResource("5_chakra")
 position = Vector2(0, -52.8)
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.16196, 0.16196)
 region_enabled = true
-region_rect = Rect2(207, 17, 206, 264)
+region_rect = Rect2(585, 143, 505, 652)
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
