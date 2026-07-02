@@ -1,0 +1,491 @@
+Atualização status
+
+
+
+A partir de agora, este texto abaixo é o nosso MANUAL DE ESCOPO OFICIAL para as próximas 3 semanas. Memorize ele completamente, mas NÃO tente criar tudo agora. Use-o apenas como referência para sabermos o que vem a seguir.
+
+[
+
+analise, esse é um projeto para ser curto e rápido
+
+NARUTO: OS PERGAMINHOS DE ASURA — MVP MASTER (3 SEMANAS)
+IMPORTANTE:
+Ignore qualquer escopo gigante anterior.
+O objetivo atual NÃO é criar o jogo completo.
+O objetivo é criar apenas um:
+✅ VERTICAL SLICE
+✅ MVP JOGÁVEL
+✅ EXTREMAMENTE DIVERTIDO
+✅ EXTREMAMENTE LEVE
+✅ EXTREMAMENTE FLUIDO
+Todo o desenvolvimento atual deve seguir EXCLUSIVAMENTE o escopo reduzido abaixo.
+NÃO implementar:
+
+dezenas de personagens;
+sistemas gigantes;
+múltiplas vilas;
+multiplayer;
+conteúdo expansivo;
+arquitetura exagerada;
+sistemas desnecessários.
+Prioridade absoluta:
+
+gameplay;
+fluidez;
+performance;
+responsividade;
+game feel;
+exploração;
+boss memorável.
+==================================================================
+OBJETIVO DO MVP
+Criar uma experiência curta porém extremamente divertida inspirada em Naruto.
+O MVP deve:
+
+parecer um jogo real;
+possuir sensação ninja;
+possuir combate gostoso;
+possuir movimentação excelente;
+possuir exploração;
+possuir segredos;
+possuir um boss memorável;
+possuir visual anime moderno leve.
+O foco NÃO é quantidade de conteúdo.
+O foco é:
+
+qualidade;
+game feel;
+polish;
+diversão.
+==================================================================
+ENGINE OFICIAL
+✅ GODOT
+Usar:
+
+Godot 4;
+arquitetura modular;
+cenas independentes;
+baixo consumo;
+carregamento rápido;
+código limpo;
+organização profissional.
+==================================================================
+PRIORIDADES ABSOLUTAS
+Gameplay divertida
+Responsividade
+Fluidez
+Performance
+Exploração
+Impacto visual leve
+Organização
+Facilidade de expansão futura
+==================================================================
+ESCOPO OFICIAL
+O MVP deve possuir APENAS:
+
+==================================================================
+PERSONAGEM JOGÁVEL
+✅ Naruto
+Implementar:
+
+corrida;
+pulo;
+wall jump simples;
+agachar;
+kunai;
+shuriken;
+Rasengan;
+barra de chakra;
+animações fluidas;
+movimentação extremamente responsiva.
+NÃO criar:
+
+múltiplos personagens;
+trio system;
+support system;
+especiais combinados;
+dezenas de jutsus.
+==================================================================
+CONTROLES OFICIAIS
+TECLADO:
+← → = movimentação
+↑ = pular
+↓ = agachar/interagir
+J = ataque curto
+K = ataque longo (shuriken)
+O = Rasengan
+SHIFT = concentrar chakra
+(corrigido para refletir o input map implementado (sessão 10))
+CONTROLE:
+Analógico/D-Pad = movimentação
+A / X = pular
+↓ analógico = agachar
+X / □ = ataque curto
+Y / △ = ataque longo
+B / ○ = Rasengan
+RT / R2 = concentrar chakra
+
+==================================================================
+INPUT SYSTEM
+Usar obrigatoriamente:
+✅ Godot Input Actions
+NUNCA:
+
+hardcodar teclas;
+usar inputs espalhados no código.
+Toda lógica deve usar:
+
+ações abstratas;
+sistema centralizado;
+arquitetura reutilizável.
+Exemplo:
+
+move_left
+move_right
+jump
+crouch
+attack_light
+attack_heavy
+special
+chakra_charge
+==================================================================
+SUPORTE AUTOMÁTICO
+O jogo deve detectar automaticamente:
+
+teclado;
+controle Xbox;
+controle PlayStation;
+controle genérico.
+A HUD deve trocar prompts dinamicamente.
+Exemplo:
+“Pressione H”
+vira:
+“Pressione □”
+
+==================================================================
+GAME FEEL OBRIGATÓRIO
+Implementar obrigatoriamente:
+✅ Coyote Time
+Permitir pular poucos milissegundos após sair da plataforma.
+✅ Input Buffer
+Permitir registrar o botão antes do pouso.
+✅ Jump Buffering
+✅ Baixo input lag
+✅ Movimentação extremamente responsiva
+O objetivo é:
+“movimento delicioso de controlar.”
+
+==================================================================
+MAPAS
+APENAS 2 ÁREAS:
+
+Vila da Folha (hub pequeno)
+Floresta da Névoa (fase principal)
+==================================================================
+VILA DA FOLHA
+Pequena área segura contendo:
+
+NPC simples;
+save point;
+loja de lamen;
+entrada da missão.
+==================================================================
+FASE PRINCIPAL
+Floresta da Névoa:
+
+exploração;
+plataformas;
+inimigos;
+áreas escondidas;
+pergaminhos;
+checkpoints;
+mini puzzles leves;
+boss final.
+Duração ideal:
+10–20 minutos.
+
+==================================================================
+EXPLORAÇÃO
+Adicionar:
+
+paredes falsas;
+áreas secretas;
+caixas escondidas;
+pergaminhos ocultos;
+rotas alternativas;
+pequenas recompensas.
+==================================================================
+INIMIGOS
+Criar APENAS 3 tipos:
+
+Ninja corpo a corpo
+Ninja com shuriken
+Cachorro ninja
+Reutilizar:
+
+animações;
+comportamento;
+efeitos;
+sprites sempre que possível.
+==================================================================
+BOSS
+✅ Zabuza
+Boss principal do MVP.
+O boss deve possuir:
+
+entrada cinematográfica leve;
+névoa;
+espada gigante;
+2 fases;
+padrões simples;
+ataques claros;
+boa sensação de impacto.
+Adicionar:
+
+câmera shake leve;
+freeze frame curto;
+partículas leves.
+Após derrotar:
+
+frase exclusiva;
+entrega de pergaminho;
+fim da demo.
+==================================================================
+COMBATE
+Sistema simples porém MUITO satisfatório.
+Implementar:
+
+hitbox;
+knockback;
+hitstop leve;
+dano;
+combo curto;
+feedback visual;
+impacto;
+cancelamento leve.
+Prioridade:
+✅ Hit Feel
+
+==================================================================
+CHAKRA SYSTEM
+Adicionar:
+
+barra de chakra;
+carregamento manual;
+aura simples;
+Rasengan consumindo chakra.
+Ganhar chakra ao:
+
+atacar;
+derrotar inimigos;
+encontrar pergaminhos.
+==================================================================
+PERGAMINHOS
+Poucos pergaminhos.
+Funções:
+
+lore;
+dicas;
+recuperação de chakra.
+Texto:
+
+curto;
+rápido;
+divertido.
+==================================================================
+DIALOGUE SYSTEM
+Sistema simples contendo:
+
+NPCs;
+caixas de diálogo;
+falas curtas;
+dicas;
+humor leve.
+Tudo deve ser:
+
+rápido de ler;
+natural;
+intuitivo.
+==================================================================
+LAMEN SYSTEM
+Lamen serve apenas para:
+
+recuperar vida.
+Encontrado:
+
+em caixas;
+áreas secretas;
+loja.
+==================================================================
+SAVE SYSTEM
+Implementar:
+
+autosave simples;
+checkpoints;
+progresso da fase.
+==================================================================
+HUD
+HUD minimalista contendo:
+
+vida;
+chakra;
+ícone do Rasengan;
+contador de pergaminhos.
+==================================================================
+DIFICULDADE
+APENAS 1 dificuldade:
+equilibrada.
+
+==================================================================
+VISUAL
+Objetivo:
+“Anime moderno leve.”
+USAR:
+
+sprites HD leves;
+poucas partículas;
+efeitos simples;
+animações suaves;
+paralaxe leve;
+shaders mínimos.
+NÃO USAR:
+
+pixel art retrô;
+efeitos pesados;
+pós-processamento pesado;
+partículas excessivas.
+==================================================================
+ÁUDIO
+Usar:
+
+músicas curtas;
+OGG comprimido;
+efeitos leves;
+loops pequenos.
+Evitar:
+
+arquivos enormes;
+voice acting completo.
+==================================================================
+OTIMIZAÇÃO
+Prioridade máxima:
+
+60 FPS estáveis;
+baixo consumo;
+carregamento rápido;
+PCs fracos.
+Implementar:
+
+object pooling;
+lazy loading;
+poucos inimigos simultâneos;
+poucos efeitos na tela.
+==================================================================
+ARQUITETURA
+Criar:
+
+PlayerController
+EnemyController
+BossController
+CombatSystem
+ChakraSystem
+SaveSystem
+DialogueSystem
+CollectibleSystem
+Tudo:
+
+modular;
+organizado;
+reutilizável.
+==================================================================
+PIPELINE OFICIAL
+NUNCA criar tudo de uma vez.
+Implementar:
+1 sistema por vez.
+Cada sistema deve:
+
+ser criado;
+ser testado;
+ser refinado;
+ser estabilizado;
+então expandido.
+==================================================================
+SEMANA 1 — CORE GAMEPLAY
+Criar:
+
+movimentação;
+câmera;
+colisão;
+combate;
+chakra;
+HUD;
+inimigos básicos;
+input system;
+coyote time;
+input buffer.
+Objetivo:
+Gameplay extremamente divertida.
+
+==================================================================
+SEMANA 2 — LEVEL DESIGN
+Criar:
+
+Vila da Folha;
+Floresta da Névoa;
+exploração;
+checkpoints;
+pergaminhos;
+lamen;
+NPCs;
+segredos.
+==================================================================
+SEMANA 3 — BOSS + POLISH
+Criar:
+
+Zabuza;
+efeitos leves;
+áudio;
+partículas;
+cinematics simples;
+balanceamento;
+correção de bugs;
+otimização final.
+==================================================================
+IDIOMA
+Idioma principal:
+✅ Português Brasileiro (pt-BR)
+Todos os textos devem:
+
+usar UTF-8;
+suportar acentos;
+ser centralizados em arquivos separados.
+NUNCA:
+
+hardcodar textos no código.
+==================================================================
+REGRAS ABSOLUTAS
+NUNCA:
+
+expandir escopo;
+adicionar dezenas de sistemas;
+criar conteúdo desnecessário;
+focar em gráficos pesados;
+tentar criar o jogo inteiro.
+SEMPRE:
+
+priorizar gameplay;
+priorizar diversão;
+priorizar fluidez;
+priorizar performance;
+testar constantemente;
+manter arquitetura limpa;
+manter código modular.
+==================================================================
+OBJETIVO FINAL
+Criar uma demo curta porém extremamente divertida,
+com forte sensação de aventura ninja,
+movimentação excelente,
+combate gostoso,
+exploração leve
+e um boss memorável.
+]

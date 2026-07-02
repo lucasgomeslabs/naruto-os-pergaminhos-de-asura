@@ -1,0 +1,330 @@
+METODOLOGIA OBRIGATÓRIA DE DESENVOLVIMENTO
+==================================================================
+
+IMPORTANTE:
+O jogo NÃO deve ser desenvolvido inteiro de uma vez.
+
+O desenvolvimento deve seguir:
+- arquitetura modular;
+- desenvolvimento incremental;
+- testes constantes;
+- validação contínua;
+- construção em blocos independentes.
+
+Objetivo:
+- evitar caos;
+- evitar bugs exponenciais;
+- manter consistência;
+- manter performance;
+- manter código limpo;
+- facilitar expansão futura.
+
+==================================================================
+FILOSOFIA DE DESENVOLVIMENTO
+==================================================================
+
+A prioridade NÃO é quantidade de conteúdo.
+
+A prioridade é:
+- gameplay divertida;
+- responsividade;
+- fluidez;
+- sensação boa de jogar;
+- estabilidade;
+- performance.
+
+REGRA PRINCIPAL:
+“Se não estiver divertido com pouco conteúdo,
+não ficará divertido com muito conteúdo.”
+
+==================================================================
+DESENVOLVIMENTO EM BLOCOS
+==================================================================
+
+Cada sistema deve ser:
+1. criado;
+2. testado;
+3. refinado;
+4. estabilizado;
+5. expandido.
+
+NUNCA:
+- gerar tudo de uma vez;
+- criar dezenas de sistemas simultaneamente;
+- adicionar efeitos antes do gameplay funcionar.
+
+==================================================================
+PIPELINE OFICIAL
+==================================================================
+
+==================================================================
+FASE 0 — FOUNDATION / CORE
+==================================================================
+
+Criar primeiro:
+- movimentação;
+- câmera;
+- colisão;
+- física;
+- inputs;
+- HUD básico;
+- sistema de save;
+- gerenciamento de cenas.
+
+Objetivo:
+Gameplay extremamente responsiva.
+
+==================================================================
+FASE 1 — CORE MOVEMENT
+==================================================================
+
+Implementar:
+- corrida;
+- pulo;
+- wall jump;
+- agachar;
+- colisões;
+- movimentação estilo Mario moderna.
+
+TESTAR:
+- responsividade;
+- fluidez;
+- precisão dos controles.
+
+Objetivo:
+Movimento extremamente gostoso de controlar.
+
+==================================================================
+FASE 2 — COMBAT SYSTEM
+==================================================================
+
+Implementar:
+- kunai;
+- shuriken;
+- hitbox;
+- knockback;
+- dano;
+- combos leves;
+- animações básicas.
+
+TESTAR:
+- impacto;
+- velocidade;
+- feedback visual;
+- hit feel.
+
+==================================================================
+FASE 3 — CHAKRA SYSTEM
+==================================================================
+
+Implementar:
+- barra de chakra;
+- carregamento;
+- efeitos;
+- aura;
+- especiais simples.
+
+TESTAR:
+- velocidade de ganho;
+- equilíbrio;
+- efeitos visuais.
+
+==================================================================
+FASE 4 — ENEMY AI
+==================================================================
+
+Implementar:
+- patrulha;
+- perseguição;
+- ataques simples;
+- dano;
+- comportamento básico.
+
+TESTAR:
+- performance;
+- dificuldade;
+- comportamento.
+
+==================================================================
+FASE 5 — DIALOGUE & SCROLL SYSTEM
+==================================================================
+
+Implementar:
+- pergaminhos;
+- diálogos;
+- UI de leitura;
+- NPCs;
+- lore;
+- perguntas simples.
+
+TESTAR:
+- clareza;
+- leitura;
+- progressão.
+
+==================================================================
+FASE 6 — BOSS SYSTEM
+==================================================================
+
+Implementar:
+- mini-boss;
+- padrões;
+- fases do boss;
+- ataques especiais;
+- câmera leve;
+- entrada cinematográfica simples.
+
+TESTAR:
+- dificuldade;
+- diversão;
+- clareza dos ataques.
+
+==================================================================
+FASE 7 — POLISH
+==================================================================
+
+SOMENTE após gameplay funcionar:
+- partículas;
+- efeitos especiais;
+- shaders leves;
+- câmera shake;
+- transições;
+- efeitos sonoros;
+- músicas;
+- loading cinematográfico.
+
+==================================================================
+VERTICAL SLICE OBRIGATÓRIO
+==================================================================
+
+Antes de expandir o jogo inteiro,
+criar UMA fase completa.
+
+Essa fase deve conter:
+- Naruto;
+- 1 mini-boss;
+- inimigos básicos;
+- chakra;
+- pergaminhos;
+- diálogos;
+- lamen;
+- HUD;
+- loading screen;
+- checkpoints;
+- segredos.
+
+Objetivo:
+Validar:
+- gameplay;
+- performance;
+- direção visual;
+- diversão;
+- arquitetura.
+
+==================================================================
+MVP OFICIAL
+==================================================================
+
+Criar inicialmente apenas:
+
+PERSONAGENS:
+- Naruto;
+- Sasuke;
+- Kakashi.
+
+MAPAS:
+- Vila da Folha;
+- Floresta da Névoa.
+
+BOSS:
+- Zabuza.
+
+SISTEMAS:
+- movimentação;
+- combate;
+- chakra;
+- pergaminhos;
+- loading;
+- save;
+- HUD;
+- lamen;
+- diálogos.
+
+==================================================================
+EXPANSÃO FUTURA
+==================================================================
+
+SOMENTE depois do MVP estável:
+- Akatsuki;
+- novos personagens;
+- novas vilas;
+- especiais combinados;
+- mais bosses;
+- mais segredos;
+- mais mapas;
+- sistemas avançados.
+
+==================================================================
+METODOLOGIA DE TESTES
+==================================================================
+
+Após cada bloco:
+- rodar o jogo;
+- testar gameplay;
+- corrigir bugs;
+- validar performance;
+- ajustar responsividade.
+
+NUNCA avançar:
+- com bugs graves;
+- gameplay ruim;
+- performance ruim;
+- sistemas quebrados.
+
+==================================================================
+PERFORMANCE FIRST
+==================================================================
+
+Toda nova feature deve respeitar:
+- FPS estável;
+- baixo consumo de RAM;
+- baixo uso de CPU;
+- carregamento rápido.
+
+==================================================================
+ORGANIZAÇÃO DO PROJETO
+==================================================================
+
+Criar:
+- código modular;
+- scenes independentes;
+- componentes reutilizáveis;
+- arquitetura limpa;
+- fácil manutenção;
+- fácil expansão.
+
+==================================================================
+IMPORTANTE
+==================================================================
+
+Claude deve SEMPRE:
+- implementar apenas um bloco por vez;
+- evitar gerar sistemas gigantes simultaneamente;
+- manter consistência arquitetural;
+- focar primeiro no gameplay;
+- testar continuamente;
+- priorizar fluidez acima de gráficos pesados.
+
+==================================================================
+OBJETIVO FINAL
+==================================================================
+
+Criar um jogo:
+- extremamente divertido;
+- extremamente leve;
+- extremamente fluido;
+- fácil de expandir;
+- memorável;
+- cheio de exploração;
+- cheio de personalidade;
+- com sensação real de aventura ninja.

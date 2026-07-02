@@ -1,0 +1,33 @@
+expansão do mapa
+
+
+Para manter a organização e evitar que o Godot se torne um caos conforme o mapa cresce, aqui está a estratégia de engenharia para essa expansão:
+
+1. Estrutura de "Cena de Nível" (Organização)
+Em vez de colocar tudo em uma única árvore de nós gigante, que vai deixar o editor lento, vamos usar o conceito de instanciação de cenas.
+
+FlorestaDaNevoa.tscn (Sua cena atual)
+
+Nó Nivel1_Floresta (Instancia uma cena com os troncos e copas)
+
+Nó Nivel2_AldeiaHokage (Instancia uma cena com os monumentos)
+
+Nó Nivel3_RioZabuza (Instancia a cena final de combate)
+
+Isso permite que você edite o monumento dos Hokages separadamente sem precisar abrir o mapa inteiro.
+
+2. O Fluxo de Progressão
+Como você quer contar essa história, a disposição dos eixos deve seguir um fluxo:
+
+Eixo Y (Vertical): O início na Floresta. Você sobe os níveis (copas) conforme mencionou.
+
+Eixo X (Horizontal): Ao chegar no topo da árvore, a câmera deve fazer uma transição suave para a direita, onde a "Floresta" dá lugar à clareira da Aldeia.
+
+Transição Final: A Aldeia leva ao Rio, onde o combate com Zabuza acontecerá.
+
+3. Dicas de Ouro para a Expansão
+O Monumento dos Hokages: Como ele é um elemento icônico, crie-o como um ParallaxLayer exclusivo com um motion_scale bem baixo (ex: 0.02, 0.02). Isso fará com que, enquanto o jogador corre para a direita, o monumento pareça estar quilômetros atrás, dando uma escala épica.
+
+O Efeito de Rio: Para a luta final no rio, você pode usar um Polygon2D com um shader simples de distorção para simular a água fluindo. Se quiser algo simples agora, um polígono azul com transparência 0.5 já resolve o visual.
+
+A Lua de Tsukuyomi: Mantenha-a como fizemos (fixa em 0,0). Como ela é uma "divindade" que observa tudo, ela faz sentido aparecer tanto na floresta quanto sobre o rio, unificando visualmente todas as 3 etapas.

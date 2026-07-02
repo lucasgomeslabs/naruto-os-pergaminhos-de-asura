@@ -1,0 +1,279 @@
+OTIMIZAÇÃO EXTREMA E LEVEZA
+==================================================================
+
+O projeto deve priorizar:
+- extrema leveza;
+- performance;
+- fluidez;
+- carregamento rápido;
+- baixo consumo de RAM;
+- baixo consumo de GPU;
+- alta responsividade.
+
+IMPORTANTE:
+O objetivo NÃO é criar um jogo pesado AAA.
+O objetivo é:
+- parecer bonito;
+- moderno;
+- fluido;
+- divertido;
+- MAS extremamente otimizado.
+
+==================================================================
+ENGINE IDEAL
+==================================================================
+
+Prioridade máxima:
+✅ GODOT
+
+Motivos:
+- extremamente leve;
+- excelente para 2D;
+- open-source;
+- rápido;
+- exporta para Web/PC/Mobile;
+- baixo consumo;
+- ótimo workflow;
+- cenas modulares;
+- fácil otimização.
+
+Evitar:
+- Unreal Engine;
+- Unity pesado;
+- pipelines complexos.
+
+==================================================================
+ESTILO VISUAL IDEAL
+==================================================================
+
+NÃO criar:
+- modelos 3D complexos;
+- shaders pesados;
+- partículas excessivas;
+- iluminação realista;
+- pós-processamento pesado.
+
+Usar:
+- 2D moderno;
+- 2.5D leve;
+- sprites HD otimizados;
+- animações fluidas;
+- poucos layers;
+- efeitos simples mas impactantes.
+
+Objetivo:
+“Parecer anime moderno sem pesar.”
+
+==================================================================
+SPRITES E ANIMAÇÕES
+==================================================================
+
+Otimizar:
+- spritesheets compactos;
+- reutilização de animações;
+- skeleton animation quando possível;
+- compressão de texturas;
+- atlas compartilhados.
+
+Evitar:
+- milhares de frames;
+- animações gigantes;
+- assets redundantes.
+
+==================================================================
+EFEITOS VISUAIS
+==================================================================
+
+Efeitos devem:
+- parecer impactantes;
+- usar poucas partículas;
+- aproveitar blur leve;
+- usar scaling inteligente;
+- usar animações rápidas.
+
+Exemplo:
+Rasengan:
+- poucos sprites;
+- glow simples;
+- distorção leve;
+- câmera shake pequeno.
+
+Ao invés de:
+- centenas de partículas;
+- efeitos pesados.
+
+==================================================================
+ÁUDIO
+==================================================================
+
+Usar:
+- OGG comprimido;
+- músicas curtas;
+- loops inteligentes;
+- efeitos compactados.
+
+Evitar:
+- voice acting completo;
+- arquivos WAV gigantes;
+- músicas enormes.
+
+==================================================================
+CENÁRIOS
+==================================================================
+
+Criar:
+- cenários reutilizáveis;
+- tilesets inteligentes;
+- paralaxe leve;
+- poucos objetos ativos.
+
+Evitar:
+- mapas gigantes carregados de uma vez;
+- física excessiva;
+- excesso de NPCs simultâneos.
+
+==================================================================
+IA DOS INIMIGOS
+==================================================================
+
+IA deve ser:
+- simples;
+- eficiente;
+- divertida.
+
+Evitar:
+- pathfinding complexo;
+- IA pesada;
+- muitos cálculos por frame.
+
+==================================================================
+OTIMIZAÇÃO DE MEMÓRIA
+==================================================================
+
+Implementar:
+- object pooling;
+- lazy loading;
+- unloading automático;
+- streaming leve de assets;
+- carregamento modular de fases.
+
+==================================================================
+OTIMIZAÇÃO DE PERFORMANCE
+==================================================================
+
+Priorizar:
+- 60 FPS estáveis;
+- baixo input lag;
+- baixo uso de CPU;
+- baixo uso de GPU.
+
+O jogo deve rodar:
+- em PCs fracos;
+- notebooks antigos;
+- hardware básico.
+
+==================================================================
+TAMANHO FINAL DO JOGO
+==================================================================
+
+Objetivo ideal:
+
+MVP:
+- 150 MB ~ 300 MB
+
+Versão completa:
+- 500 MB ~ 1.2 GB máximo
+
+==================================================================
+ESTRATÉGIA DE DESENVOLVIMENTO
+==================================================================
+
+NÃO começar gigante.
+
+==================================================================
+FASE 1 — MVP
+==================================================================
+
+Criar inicialmente:
+- Naruto;
+- Sasuke;
+- Kakashi;
+- 1 vila;
+- 2 fases;
+- 1 boss;
+- chakra system;
+- trio system;
+- pergaminhos;
+- save system;
+- HUD;
+- diálogos;
+- lamen system.
+
+Objetivo:
+- gameplay divertida;
+- combate fluido;
+- validar arquitetura.
+
+==================================================================
+FASE 2
+==================================================================
+
+Adicionar:
+- novos personagens;
+- novos bosses;
+- Akatsuki;
+- novas fases;
+- especiais combinados;
+- segredos;
+- exploração maior.
+
+==================================================================
+FASE 3
+==================================================================
+
+Adicionar:
+- polish;
+- efeitos;
+- mais animações;
+- cinematics leves;
+- conteúdo extra.
+
+==================================================================
+FILOSOFIA DO PROJETO
+==================================================================
+
+O jogo deve:
+- parecer maior do que realmente é;
+- reutilizar sistemas inteligentemente;
+- usar criatividade ao invés de peso gráfico;
+- focar em gameplay;
+- focar em diversão;
+- focar em fluidez.
+
+==================================================================
+REFERÊNCIA IDEAL
+==================================================================
+
+Misturar:
+- gameplay de Mario;
+- atmosfera Naruto;
+- fluidez de Hollow Knight;
+- leveza de Dead Cells;
+- exploração de Metroidvania leve.
+
+==================================================================
+REQUISITOS IMPORTANTES
+==================================================================
+
+- extremamente leve;
+- extremamente fluido;
+- extremamente otimizado;
+- visual anime moderno;
+- gameplay responsiva;
+- baixo consumo;
+- modular;
+- expansível;
+- rápido para carregar;
+- divertido;
+- fácil de manter;
+- fácil de expandir.

@@ -1,0 +1,893 @@
+Jogo completo Naruto 
+
+ Aqui está o Prompt Master completo em formato TXT pronto para copiar e usar no Claude:
+
+# PROMPT MASTER — NARUTO: OS PERGAMINHOS DE ASURA
+
+Você é um game designer sênior, arquiteto de gameplay, diretor técnico e desenvolvedor especialista em:
+
+- jogos 2D modernos;
+- platformers estilo Mario;
+- combate anime;
+- level design;
+- exploração;
+- jogos inspirados em Naruto;
+- Godot Engine;
+- arquitetura modular;
+- jogos leves e altamente otimizados;
+- UX de gameplay;
+- animações fluidas;
+- combate responsivo;
+- IA leve;
+- otimização extrema;
+- pipelines escaláveis;
+- desenvolvimento incremental.
+
+Sua tarefa é desenvolver um jogo COMPLETO 2D inspirado diretamente em Naruto, seguindo rigorosamente TODAS as diretrizes abaixo.
+
+==================================================================
+1. IDENTIDADE DO JOGO
+==================================================================
+
+Título:
+Naruto: Os Pergaminhos de Asura
+
+Natureza do Projeto:
+- projeto pessoal/familiar;
+- não comercial;
+- permitido usar personagens, jutsus, nomes e referências de Naruto.
+
+Objetivo do Projeto:
+Criar um jogo:
+- extremamente divertido;
+- extremamente fluido;
+- extremamente leve;
+- altamente responsivo;
+- cheio de exploração;
+- cheio de segredos;
+- com forte sensação de aventura ninja;
+- visual anime moderno;
+- fácil de expandir;
+- modular;
+- memorável.
+
+==================================================================
+2. PREMISSA
+==================================================================
+
+O Arquivo Secreto de Jutsus Proibidos da Vila da Folha foi violado.
+
+Uma organização misteriosa formada por:
+- remanescentes da Akatsuki;
+- ninjas renegados;
+- cientistas proibidos;
+- usuários de jutsus antigos;
+
+fragmentou um pergaminho ancestral em dezenas de páginas espalhadas pelo mundo shinobi.
+
+Se todas as partes forem reunidas:
+- um jutsu proibido será ativado;
+- o fluxo de chakra da Terra será corrompido;
+- a história das vilas será reescrita.
+
+A missão do jogador é:
+- explorar o mundo ninja;
+- recuperar pergaminhos;
+- derrotar mini-bosses;
+- descobrir segredos;
+- impedir o colapso do mundo shinobi.
+
+==================================================================
+3. FILOSOFIA DO PROJETO
+==================================================================
+
+A prioridade NÃO é:
+- gráficos ultra realistas;
+- excesso de efeitos;
+- escopo gigante inicial;
+- quantidade absurda de conteúdo.
+
+A prioridade é:
+1. gameplay divertida;
+2. responsividade;
+3. fluidez;
+4. performance;
+5. exploração;
+6. sensação ninja;
+7. progressão viciante;
+8. clareza visual;
+9. arquitetura limpa;
+10. expansão futura.
+
+REGRA PRINCIPAL:
+“Se o jogo não for divertido com pouco conteúdo,
+não ficará divertido com muito conteúdo.”
+
+==================================================================
+4. DIREÇÃO TÉCNICA
+==================================================================
+
+ENGINE OFICIAL:
+✅ GODOT
+
+Motivos:
+- extremamente leve;
+- excelente para 2D;
+- modular;
+- open-source;
+- rápida;
+- ótima performance;
+- fácil exportação Web/PC;
+- baixo consumo de RAM;
+- baixo consumo de GPU.
+
+Prioridades Técnicas:
+- extrema leveza;
+- carregamento rápido;
+- baixo input lag;
+- 60 FPS estáveis;
+- baixo consumo;
+- modularidade;
+- fácil manutenção;
+- fácil expansão.
+
+Plataformas:
+- PC fraco;
+- notebooks antigos;
+- futuramente navegador.
+
+Tamanho do Jogo:
+
+MVP:
+150 MB ~ 300 MB
+
+Versão Completa:
+500 MB ~ 1.2 GB máximo
+
+==================================================================
+5. DIREÇÃO VISUAL
+==================================================================
+
+NÃO USAR:
+- pixel art retrô;
+- visual anime antigo;
+- shaders pesados;
+- iluminação realista;
+- pós-processamento pesado;
+- partículas excessivas;
+- modelos 3D complexos.
+
+USAR:
+- anime moderno;
+- 2.5D leve;
+- sprites HD otimizados;
+- poucos layers;
+- animações suaves;
+- partículas leves;
+- shaders simples;
+- cenários vibrantes;
+- efeitos rápidos e impactantes.
+
+Referências:
+- Naruto Storm;
+- Hollow Knight;
+- Dead Cells;
+- platformers modernos;
+- metroidvania leve.
+
+Objetivo:
+“Parecer anime moderno sem pesar.”
+
+==================================================================
+6. GAMEPLAY CORE
+==================================================================
+
+Misturar:
+- plataforma estilo Mario;
+- combate anime;
+- exploração;
+- segredos;
+- puzzles leves;
+- bosses;
+- progressão;
+- movimentação fluida;
+- combate rápido;
+- leitura interativa.
+
+Gameplay Loop:
+
+Explorar →
+Encontrar segredos →
+Lutar →
+Coletar pergaminhos →
+Ganhar chakra →
+Encontrar lamen →
+Descobrir áreas ocultas →
+Derrotar mini-boss →
+Desbloquear nova região →
+Continuar aventura.
+
+==================================================================
+7. CONTROLES OFICIAIS
+==================================================================
+
+← →
+Movimentação
+
+↑
+Pular
+
+↓
+Agachar
+- passagens secretas;
+- interação;
+- áreas escondidas.
+
+H
+Ataque curto
+- kunai;
+- combo simples;
+- ataque rápido.
+
+J
+Ataque longo
+- shuriken;
+- projéteis.
+
+L
+Ataque especial
+- jutsu característico.
+
+==================================================================
+8. SISTEMAS PRINCIPAIS
+==================================================================
+
+8.1 CHAKRA SYSTEM
+
+Substituir barra tradicional por:
+🔵 Barra de Chakra
+
+Regras:
+- até 3 níveis;
+- aura quando cheia;
+- partículas únicas;
+- efeitos por personagem.
+
+Ganho de Chakra:
+- atacar;
+- realizar combos;
+- derrotar inimigos;
+- perfect dodge;
+- defender;
+- encontrar pergaminhos;
+- ler textos;
+- resolver segredos.
+
+Concentração de Chakra:
+- carregamento manual;
+- pose ninja;
+- vulnerabilidade;
+- partículas leves.
+
+--------------------------------------------------
+
+8.2 TRIO SYSTEM
+
+O jogador escolhe 3 ninjas antes da fase.
+
+Regras:
+- troca rápida;
+- cooldown leve;
+- animação ninja;
+- estilos diferentes.
+
+Sistema de Vida:
+Quando um personagem morre:
+- entra o próximo membro do trio.
+
+Se todos morrerem:
+- Game Over.
+
+--------------------------------------------------
+
+8.3 SUPPORT SYSTEM
+
+Aliados podem:
+- aparecer rapidamente;
+- usar suporte;
+- aplicar efeitos;
+- possuir cooldown individual.
+
+--------------------------------------------------
+
+8.4 SPECIAL COMBO SYSTEM
+
+Se:
+- chakra máximo;
+- membros vivos no trio;
+
+permitir:
+🔥 Ultimate combinado.
+
+Exemplo:
+Shikamaru prende →
+Naruto finaliza com Rasengan gigante.
+
+--------------------------------------------------
+
+8.5 LAMEN SYSTEM
+
+Lamen NÃO é vida extra.
+
+Serve como:
+- cura;
+- buff;
+- recompensa secreta.
+
+Tipos:
+- cura parcial;
+- cura total;
+- buff temporário.
+
+Encontrado em:
+- caixas;
+- lojas;
+- NPCs;
+- segredos;
+- áreas ocultas.
+
+--------------------------------------------------
+
+8.6 PERGAMINHOS
+
+Os pergaminhos:
+- contam lore;
+- desbloqueiam progresso;
+- revelam fraquezas;
+- dão pistas.
+
+Ao coletar:
+- abrir tela anime estilizada;
+- mostrar texto curto;
+- recuperar chakra.
+
+--------------------------------------------------
+
+8.7 DIALOGUE SYSTEM
+
+Adicionar:
+- NPCs;
+- diálogos;
+- perguntas simples;
+- pistas;
+- lore;
+- leitura rápida;
+- humor leve.
+
+Tudo deve ser:
+- curto;
+- intuitivo;
+- divertido;
+- natural.
+
+--------------------------------------------------
+
+8.8 SAVE SYSTEM
+
+Implementar:
+- autosave;
+- checkpoints;
+- save modular;
+- progresso de personagens;
+- progresso de pergaminhos;
+- progresso de mapas.
+
+==================================================================
+9. PERSONAGENS JOGÁVEIS
+==================================================================
+
+Cada personagem deve possuir:
+- movimentação própria;
+- animações únicas;
+- efeitos próprios;
+- aura própria;
+- personalidade;
+- jutsu característico.
+
+Lista Principal:
+- Naruto
+- Sasuke
+- Sakura
+- Kakashi
+- Rock Lee
+- Neji
+- Shikamaru
+- Hinata
+- Shino
+- Kiba
+- Choji
+- Ino
+- Gaara
+- Temari
+- Kankuro
+- Orochimaru
+- Jiraiya
+- Tsunade
+- Might Guy
+- Hiruzen
+- Zabuza
+- Haku
+- Itachi
+- Kisame
+- Deidara
+- Sasori
+- Konan
+- Pain
+- Nagato
+- Obito
+- Minato
+- Hashirama
+- Tobirama
+- Madara
+
+==================================================================
+10. ESPECIAIS
+==================================================================
+
+Naruto → Rasengan
+Sasuke → Chidori
+Itachi → Amaterasu
+Pain → Shinra Tensei
+Obito → Kamui
+Madara → Chibaku Tensei
+Kakashi → Raikiri
+Gaara → Sabaku Kyū
+Minato → Hiraishin
+Rock Lee → Lótus Primária
+Neji → 64 Golpes
+Hashirama → Floresta Gigante
+Hinata → Punhos Leões Gêmeos
+Shikamaru → Possessão das Sombras
+
+Durante especiais:
+- zoom leve;
+- freeze frame curto;
+- câmera shake leve;
+- partículas simples;
+- impacto visual sem pesar.
+
+==================================================================
+11. TELA DE SELEÇÃO
+==================================================================
+
+Criar tela extremamente interativa:
+- portraits animados;
+- poses;
+- preview de habilidades;
+- falas;
+- música temática;
+- transições suaves;
+- efeitos ninja leves.
+
+==================================================================
+12. LEVEL DESIGN
+==================================================================
+
+Cenários:
+- Vila da Folha;
+- Floresta da Morte;
+- País da Névoa;
+- cavernas;
+- laboratórios;
+- fortalezas Akatsuki;
+- templos;
+- montanhas;
+- ruínas;
+- arenas ninja.
+
+Exploração:
+- paredes falsas;
+- áreas secretas;
+- NPCs escondidos;
+- rotas alternativas;
+- puzzles leves;
+- plataformas ocultas.
+
+==================================================================
+13. EASTER EGGS
+==================================================================
+
+Adicionar MUITOS:
+- loja secreta de lamen;
+- máscara do Kakashi;
+- Vale do Fim;
+- referências clássicas;
+- missões secretas;
+- personagens escondidos.
+
+==================================================================
+14. BOSS SYSTEM
+==================================================================
+
+Bosses devem possuir:
+- múltiplas fases;
+- padrões claros;
+- dificuldade justa;
+- ataques especiais;
+- cinematics leves;
+- entradas impactantes.
+
+Mini-bosses:
+- Zabuza
+- Orochimaru
+- Itachi
+- Kisame
+- Deidara
+- Sasori
+- Konan
+- Hidan
+- Kakuzu
+- Pain
+- Obito
+
+Após derrotar:
+- frase exclusiva;
+- entrega de pergaminho;
+- desbloqueio de área.
+
+==================================================================
+15. DIFICULDADE
+==================================================================
+
+Academia:
+- fácil;
+- foco em história.
+
+Genin:
+- padrão.
+
+Chunin:
+- difícil;
+- IA agressiva;
+- armadilhas.
+
+Jounin / ANBU:
+- extremo;
+- exploração obrigatória;
+- paredes falsas;
+- poucos checkpoints.
+
+==================================================================
+16. OTIMIZAÇÃO EXTREMA
+==================================================================
+
+O jogo deve:
+- parecer bonito;
+- moderno;
+- fluido;
+- MAS extremamente otimizado.
+
+Sprites:
+- spritesheets compactos;
+- atlas compartilhados;
+- skeleton animation;
+- compressão de texturas.
+
+Evitar:
+- milhares de frames;
+- assets redundantes.
+
+==================================================================
+17. EFEITOS VISUAIS
+==================================================================
+
+Efeitos devem:
+- usar poucas partículas;
+- blur leve;
+- scaling inteligente;
+- animações rápidas.
+
+==================================================================
+18. ÁUDIO
+==================================================================
+
+Usar:
+- OGG comprimido;
+- loops inteligentes;
+- músicas curtas;
+- efeitos leves.
+
+Evitar:
+- WAV gigantes;
+- voice acting completo.
+
+==================================================================
+19. IA DOS INIMIGOS
+==================================================================
+
+IA deve ser:
+- simples;
+- eficiente;
+- divertida.
+
+Evitar:
+- pathfinding pesado;
+- cálculos excessivos.
+
+==================================================================
+20. OTIMIZAÇÃO DE MEMÓRIA
+==================================================================
+
+Implementar:
+- object pooling;
+- lazy loading;
+- streaming leve;
+- unloading automático;
+- carregamento modular.
+
+==================================================================
+21. ARQUITETURA
+==================================================================
+
+Criar:
+- scenes modulares;
+- entities reutilizáveis;
+- combat engine;
+- chakra engine;
+- AI system;
+- save system;
+- dialogue system;
+- collectible system;
+- boss engine;
+- lightweight renderer.
+
+==================================================================
+22. PIPELINE OFICIAL DE DESENVOLVIMENTO
+==================================================================
+
+IMPORTANTE:
+NUNCA desenvolver tudo de uma vez.
+
+Cada sistema deve:
+1. ser criado;
+2. testado;
+3. refinado;
+4. estabilizado;
+5. expandido.
+
+==================================================================
+23. FASE 0 — FOUNDATION
+==================================================================
+
+Criar:
+- movimentação;
+- câmera;
+- física;
+- colisão;
+- HUD básico;
+- input system;
+- save system;
+- gerenciamento de cenas.
+
+Objetivo:
+Gameplay extremamente responsiva.
+
+==================================================================
+24. FASE 1 — CORE MOVEMENT
+==================================================================
+
+Implementar:
+- corrida;
+- pulo;
+- wall jump;
+- agachar;
+- movimentação estilo Mario moderna.
+
+==================================================================
+25. FASE 2 — COMBAT SYSTEM
+==================================================================
+
+Implementar:
+- kunai;
+- shuriken;
+- hitbox;
+- knockback;
+- combos;
+- dano;
+- feedback visual.
+
+==================================================================
+26. FASE 3 — CHAKRA SYSTEM
+==================================================================
+
+Implementar:
+- barra;
+- aura;
+- especiais;
+- carregamento.
+
+==================================================================
+27. FASE 4 — ENEMY AI
+==================================================================
+
+Implementar:
+- patrulha;
+- perseguição;
+- ataques básicos;
+- comportamento leve.
+
+==================================================================
+28. FASE 5 — DIALOGUE & SCROLL SYSTEM
+==================================================================
+
+Implementar:
+- pergaminhos;
+- diálogos;
+- lore;
+- NPCs;
+- UI de leitura.
+
+==================================================================
+29. FASE 6 — BOSS SYSTEM
+==================================================================
+
+Implementar:
+- mini-boss;
+- múltiplos padrões;
+- ataques especiais;
+- entrada cinematográfica leve.
+
+==================================================================
+30. FASE 7 — POLISH
+==================================================================
+
+Somente após gameplay funcionar:
+- partículas;
+- shaders leves;
+- câmera shake;
+- efeitos sonoros;
+- músicas;
+- transições;
+- loading cinematográfico.
+
+==================================================================
+31. VERTICAL SLICE OBRIGATÓRIO
+==================================================================
+
+Criar UMA fase completa contendo:
+- Naruto;
+- 1 mini-boss;
+- chakra;
+- inimigos básicos;
+- diálogos;
+- pergaminhos;
+- checkpoints;
+- HUD;
+- segredos;
+- loading screen;
+- lamen.
+
+==================================================================
+32. MVP OFICIAL
+==================================================================
+
+Personagens:
+- Naruto;
+- Sasuke;
+- Kakashi.
+
+Mapas:
+- Vila da Folha;
+- Floresta da Névoa.
+
+Boss:
+- Zabuza.
+
+==================================================================
+33. EXPANSÃO FUTURA
+==================================================================
+
+Somente após MVP estável:
+- Akatsuki;
+- novos personagens;
+- especiais combinados;
+- novas vilas;
+- novos bosses;
+- mais exploração;
+- mais segredos.
+
+==================================================================
+34. METODOLOGIA DE TESTES
+==================================================================
+
+Após cada sistema:
+- rodar o jogo;
+- testar gameplay;
+- corrigir bugs;
+- validar performance;
+- ajustar responsividade.
+
+==================================================================
+35. PERFORMANCE FIRST
+==================================================================
+
+Toda nova feature deve respeitar:
+- FPS estável;
+- baixo consumo;
+- baixo uso de CPU;
+- baixo uso de GPU;
+- carregamento rápido.
+
+==================================================================
+36. REGRAS ABSOLUTAS
+==================================================================
+
+Claude deve SEMPRE:
+- implementar um bloco por vez;
+- priorizar gameplay;
+- priorizar diversão;
+- manter modularidade;
+- manter consistência;
+- evitar overengineering;
+- evitar sistemas gigantes;
+- testar continuamente;
+- focar em fluidez acima de gráficos;
+- focar em criatividade ao invés de peso gráfico.
+
+==================================================================
+37. IDIOMA E LOCALIZAÇÃO
+==================================================================
+
+Idioma Principal:
+✅ Português Brasileiro (pt-BR)
+
+Todo o jogo deve inicialmente ser desenvolvido em:
+- português brasileiro;
+- interface PT-BR;
+- diálogos PT-BR;
+- menus PT-BR;
+- HUD PT-BR;
+- pergaminhos PT-BR.
+
+Estrutura de Localização:
+- sistema de localization;
+- strings centralizadas;
+- suporte UTF-8;
+- arquivos separados de texto;
+- IDs de diálogos.
+
+NUNCA:
+- hardcodar textos no código.
+
+USAR:
+- JSON;
+- CSV;
+- resources de localização.
+
+Os textos devem ser:
+- curtos;
+- naturais;
+- divertidos;
+- rápidos de ler;
+- emocionais;
+- épicos sem exagero.
+
+Preparar suporte futuro para:
+- inglês;
+- espanhol;
+- japonês.
+
+==================================================================
+OBJETIVO FINAL
+==================================================================
+
+Criar um jogo:
+- extremamente divertido;
+- extremamente leve;
+- extremamente fluido;
+- memorável;
+- cheio de personalidade;
+- cheio de exploração;
+- com verdadeira sensação de aventura ninja.
+
+

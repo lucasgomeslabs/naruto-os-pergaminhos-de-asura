@@ -36,3 +36,13 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+
+# =============================================================================
+# Assets brutos — vivem FORA do repo em C:\Projetos\naruto-game-assets-brutos\
+# (defesa caso voltem por engano)
+# =============================================================================
+NOPA/
+naruto_sprites.zip
+
+# Estado local do Claude Code (permissões aprovadas nesta máquina)
+.claude/settings.local.json

@@ -2,6 +2,21 @@
 
 Toda alteração relevante na estrutura do projeto, correções de bugs e adições de mecânicas são registradas de forma transparente neste documento.
 
+> O histórico detalhado sessão a sessão (commits, decisões, pendências) vive no `CONTEXT.md`.
+
+---
+
+## [2026-07-02] - Higiene do repo (sessão 10, bloco 1)
+
+### 🧹 Organização (Changed)
+- **Docs para `documentation/`:** movidos da raiz os 6 documentos de metodologia/escopo (`Atualização status`, `Jogo completo Naruto`, `METODOLOGIA OBRIGATÓRIA DE DESENVOL`, `OTIMIZAÇÃO EXTREMA E LEVEZA`, `expansão do mapa`, `implementação futura# Naruto`). Na raiz permanecem só os operacionais: `CLAUDE.md`, `CLAUDE_CODE.md`, `CONTEXT.md`, `Changelog.md`, `README.md`, `PROMPT.md`, `SUGESTOES.md`.
+- **Assets brutos externalizados:** `NOPA/` e `naruto_sprites.zip` movidos para `C:\Projetos\naruto-game-assets-brutos\` (fora do repo); 36 `.import` gerados pelo Godot para os PNGs de NOPA removidos (verificação 1 a 1); `.gitignore` agora bloqueia `NOPA/` e `naruto_sprites.zip`.
+- **`README.md.md` renomeado:** era um write-up técnico de combate/IA com extensão duplicada → `documentation/combate-ia-writeup.md`.
+- **Controles corrigidos na doc:** `documentation/Atualização status.txt` atualizado de H/J/L/Shift para o input map real J/K/O/Shift.
+- **`.claude/settings.local.json` untracked** (estado local de permissões do Claude Code) e adicionado ao `.gitignore`.
+
+Zero mudança de comportamento do jogo — nenhuma cena, script ou asset importado em uso foi tocado.
+
 ---
 
 ## [Unreleased] - Semana 1: Core Gameplay

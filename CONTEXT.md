@@ -129,7 +129,22 @@ Nunca commitar antes da confirmação do usuário.
 - Saída do Ichiraku reposiciona o Player em `(-600,0)` (placeholder Zona 4). Sem Zona 4, cai no `test_stage` e toma dano de queda. Resolve quando a Zona 4 existir (trocar pela entrada real).
 - "Respawn parece Zona 1" é **falso-positivo**: vai pra `zona_2` corretamente (`RESPAWN_ZONE = zona_2`, zero referência a Zona 1 no código). A impressão vem do `jiraiya_intro` AUTO do placeholder da Zona 2.
 - `jiraiya_intro` re-dispara a cada respawn (`one_shot` não persiste entre reloads) — resolver com flag no SaveSystem quando a Zona 2 virar design real.
-- **Config divergente:** projeto está em **1152×648 + Forward Plus**, não 720p/Compatibility. Web exige Compatibility — alinhar antes de exportar pra Web/Android.
+- **Config divergente:** projeto está em **1152×648 + Forward Plus**, não 720p/Compatibility. Web exige Compatibility — alinhar antes de exportar pra Web/Android. *(→ Bloco 2 da Sessão 10)*
+
+---
+
+## Sessão 10 — Bloco 1: higiene do repo (sem mudança de comportamento)
+
+### Resolvido neste bloco
+- ✅ **Working tree suja** (6 `.txt` + `NOPA/` + zip untracked desde a sessão 8/9) — tudo destinado.
+- ✅ **Docs de metodologia na raiz** → movidos para `documentation/` (na raiz ficam só os operacionais: CLAUDE.md, CLAUDE_CODE.md, CONTEXT.md, Changelog.md, README.md, PROMPT.md, SUGESTOES.md).
+- ✅ **`NOPA/` e `naruto_sprites.zip` dentro do projeto** → movidos para **`C:\Projetos\naruto-game-assets-brutos\`** (fora do repo; local canônico dos assets brutos). 36 `.import` de NOPA removidos (conferidos 1 a 1); `.gitignore` bloqueia o retorno de ambos.
+- ✅ **Divergência de controles na doc** — `documentation/Atualização status.txt` corrigido de H/J/L para J/K/O (input map real).
+- ✅ **`README.md.md`** (write-up de combate/IA com extensão duplicada) → `documentation/combate-ia-writeup.md`.
+- ✅ `.claude/settings.local.json` untracked + gitignorado (estado local do Claude Code).
+
+### Nota
+- `README.md` da raiz continua defasado (controles H/J/L, status "Semana 1") — atualização fica para bloco futuro, fora do escopo de higiene.
 
 ---
 
