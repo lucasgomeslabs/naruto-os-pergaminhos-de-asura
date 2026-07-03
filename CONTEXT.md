@@ -1,6 +1,6 @@
 # Naruto: Os Pergaminhos de Asura — Context
 
-**Engine**: Godot 4.6 | **Branch**: main | **Repo**: lucascontatoedf-lgtm/naruto-os-pergaminhos-de-asura
+**Engine**: Godot 4.6 | **Branch**: main | **Repo**: lucasgomeslabs/naruto-os-pergaminhos-de-asura
 
 ---
 
@@ -129,7 +129,7 @@ Nunca commitar antes da confirmação do usuário.
 - Saída do Ichiraku reposiciona o Player em `(-600,0)` (placeholder Zona 4). Sem Zona 4, cai no `test_stage` e toma dano de queda. Resolve quando a Zona 4 existir (trocar pela entrada real).
 - "Respawn parece Zona 1" é **falso-positivo**: vai pra `zona_2` corretamente (`RESPAWN_ZONE = zona_2`, zero referência a Zona 1 no código). A impressão vem do `jiraiya_intro` AUTO do placeholder da Zona 2.
 - `jiraiya_intro` re-dispara a cada respawn (`one_shot` não persiste entre reloads) — resolver com flag no SaveSystem quando a Zona 2 virar design real.
-- **Config divergente:** projeto está em **1152×648 + Forward Plus**, não 720p/Compatibility. Web exige Compatibility — alinhar antes de exportar pra Web/Android. *(→ Bloco 2 da Sessão 10)*
+- ✅ **Config divergente — RESOLVIDA (Sessão 10, Bloco 2):** `project.godot` agora em **1280×720 + GL Compatibility** (desktop e mobile), stretch `canvas_items`/`keep`. Testado no editor (Ichiraku enquadrado, floresta ok, FPS estável).
 
 ---
 
@@ -145,6 +145,19 @@ Nunca commitar antes da confirmação do usuário.
 
 ### Nota
 - `README.md` da raiz continua defasado (controles H/J/L, status "Semana 1") — atualização fica para bloco futuro, fora do escopo de higiene.
+
+---
+
+## Sessão 10 — Bloco 2: config alvo (720p 16:9 + Compatibility)
+
+### Aplicado em `project.godot`
+- `[display]`: viewport **1280×720**, stretch `canvas_items`. `aspect="keep"` é o default do Godot 4 — o editor removeu a linha redundante ao salvar; comportamento efetivo é keep.
+- `[rendering]`: `renderer/rendering_method="gl_compatibility"` + `.mobile` idem. `d3d12`/Jolt intactos (inertes no alvo).
+- Teste aprovado: test_stage ok, **Ichiraku enquadrado** (canário da regressão da sessão 9), respawn Zona 2 + diálogo Jiraiya enquadrado, floresta sem vazamento de parallax, FPS estável. Akatsuki não testável (frames ainda não ligados — rewrite sai com a Zona 5).
+
+### Notas de ambiente
+- **Projeto movido no disco:** repo agora em `C:\Projetos\Naruto projeto\naruto-game`; assets brutos em `C:\Projetos\Naruto projeto\naruto-game-assets-brutos` (corrige o caminho registrado no Bloco 1).
+- **Owner do GitHub renomeado** para `lucasgomeslabs` — `git remote set-url` aplicado; URL atualizada no cabeçalho deste arquivo.
 
 ---
 

@@ -6,6 +6,16 @@ Toda alteração relevante na estrutura do projeto, correções de bugs e adiç�
 
 ---
 
+## [2026-07-03] - Config alvo de distribuição (sessão 10, bloco 2)
+
+### ⚙️ Configuração (Changed)
+- **Resolução base:** default 1152×648 → **1280×720 16:9** (seção `[display]` nova no `project.godot`), stretch `canvas_items` (aspect keep = default).
+- **Renderer:** Forward Plus → **GL Compatibility** (desktop + mobile) — exigência do alvo PC + Android + Web.
+- **URL do repo:** remote local e docs atualizados para `lucasgomeslabs/naruto-os-pergaminhos-de-asura` (owner renomeado no GitHub).
+- Validado no editor: `test_stage`, cutscene Ichiraku (canário de enquadramento da sessão 9), respawn/Zona 2, parallax da floresta, FPS estável. Nenhuma cena ou script alterado.
+
+---
+
 ## [2026-07-02] - Higiene do repo (sessão 10, bloco 1)
 
 ### 🧹 Organização (Changed)
