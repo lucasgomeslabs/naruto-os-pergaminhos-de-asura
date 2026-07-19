@@ -34,3 +34,24 @@ do naruto-game são consequência direta dela.
   referencia a governança comum por **caminho absoluto**.
 - Registro histórico não se reescreve para "corrigir" caminho: `141`/`Changelog:23` ficam.
 - Conflito herdado "commit+push juntos" foi **revogado**; a operação comum usa gates separados.
+
+## Split do CONTEXT.md (`4b15c7a`)
+
+- **O quê:** `CONTEXT.md` (235 linhas monolíticas) dividido em `contexto.md` (69, estado
+  conceitual), `decisoes.md` (37, decisões fechadas) e
+  `docs/resumo-sessao-{pre-5,5,6,7,8,9,10,11}.md` (histórico por sessão).
+- **Motivo:** o arquivo único misturava estado atual e histórico de 10 sessões; a mistura
+  já havia gerado contradição real (as linhas 141/159 afirmavam caminhos diferentes para o
+  mesmo diretório — uma histórica, outra vigente).
+- **Duplicados resolvidos:** config alvo 720p (4 cópias → `decisoes.md`); renomear
+  `floresta_da_nevoa` → `zona_5` (3 cópias → uma pendência em `contexto.md`);
+  `KamuiTrigger.exit_position` reclassificado de decisão para pendência.
+- **Descartado:** "Como usar este arquivo" (obsoleto); "Estrutura de pastas" (mapa de
+  diretórios que defasa a cada arquivo criado — o Code lê o disco); "Regra permanente zero
+  commits" (já migrada ao `CLAUDE.md` como gate de play-test).
+- **Numeração das sessões:** confirmada por FATO via marcadores nas mensagens de commit,
+  não por data (sessões 3 e 4 caem no mesmo dia; a 10 se espalha por dois). Sessões 1–4
+  consolidadas em `resumo-sessao-pre-5.md` — a governança de controle de sessão ainda não
+  existia à época e o histórico não permite reconstruir a divisão.
+- **Renumeração:** o heading "Próximo bloco — Sessão 10" (trabalho futuro rotulado com
+  número já consumido) virou "Próximos passos (Sessão 12)".
