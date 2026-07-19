@@ -15,8 +15,7 @@ vivem em `C:\Projetos\projetos-pessoais\projetos-pessoais-operacoes\`:
 
 ## Projeto
 
-Godot 4.6 · GDScript · 2D platformer. Estado e stack detalhada em `CONTEXT.md`.
-(O split de `CONTEXT.md` em `contexto.md` + `docs/resumo-sessao-N.md` é bloco futuro.)
+Godot 4.6 · GDScript · 2D platformer. Estado atual em `contexto.md`; decisões de design em `decisoes.md`; histórico por sessão em `docs/`.
 
 ## Específico do game
 
