@@ -1,70 +1,39 @@
-# CLAUDE.md — Regras Permanentes de Workflow
+# CLAUDE.md — naruto-game
 
-Leia este arquivo no início de toda sessão. Estas regras não mudam.
+Arquivo carregado automaticamente ao abrir este repo. Contém só o que é específico do
+jogo; a governança de processo vem da operação comum.
 
-## Papel
-- Você é o Coworker (executor). O Tech Lead toma as decisões de design e arquitetura.
-- Nunca tome decisões de design sozinho — traga para o Tech Lead primeiro.
+## Governança comum (ler primeiro)
 
-## Fluxo obrigatório
-1. Tech Lead pede análise → você analisa e reporta
-2. Tech Lead decide → você implementa
-3. Você mostra o diff e aguarda
-4. Usuário testa no Godot Editor e traz feedback
-5. Tech Lead aprova → você commita e push
-6. **Zero commits sem teste confirmado pelo usuário no editor. Sem exceções.**
+A operação é **Gomes + Chat + Code**. As regras de processo — papéis, gates separados de
+commit e push, DIFF antes de aplicar, execução em blocos, abertura de sessão read-only —
+vivem em `C:\Projetos\projetos-pessoais\projetos-pessoais-operacoes\`:
 
-## Regras de implementação
-- Analisar antes de implementar — retornar só o que foi pedido, sem contexto extra
-- Mostrar apenas o diff — nunca o arquivo inteiro
-- Não fazer perguntas desnecessárias — se a análise revelar ambiguidade, listar só as decisões bloqueantes
-- Mudança mínima necessária — sem refatoração fora do escopo
-- Sem overengineering
-- Nunca inventar comportamento, arquivos ou código
-- Diferenciar fatos de suposições em uma linha, não em parágrafos
-- Nunca fazer git, commit ou push — isso é papel do Claude Code
+- `prompt.md` — governança do Chat (Tech Lead)
+- `code.md` — governança do Code (Executor)
+- `estrutura.md` — organização dos repos e do estado
 
+## Projeto
 
-## Regras de commit
-- Nunca commitar sem go explícito do Tech Lead
-- Nunca commitar sem teste confirmado pelo usuário no Godot Editor
-- Mensagens de commit no formato: `Tipo: descrição curta`
-- Sempre commitar e push juntos
-- Atualizar `CONTEXT.md` antes do último commit de cada sessão
+Godot 4.6 · GDScript · 2D platformer. Estado e stack detalhada em `CONTEXT.md`.
+(O split de `CONTEXT.md` em `contexto.md` + `docs/resumo-sessao-N.md` é bloco futuro.)
 
-## Fim de sessão
-- Atualizar `CONTEXT.md` com commits, decisões e pendências da sessão
-- Commit final: `Docs: atualiza CONTEXT.md sessão N`
-- Push e aguardar
+## Específico do game
 
----
+### Gate de play-test (instanciação-game do gate de verificação)
 
-## Lições aprendidas — Sessão 7
+Commit só após o Gomes testar no Godot Editor. Em jogo, sensação, fluidez e hit feel só
+o humano jogando avalia — nenhum teste automatizado substitui. Complementa, não revoga,
+os gates de commit/push do `code.md`.
 
-### Direcionamento de tarefas
-- Coworker: leitura, análise, diffs para revisão. NUNCA edita arquivo em disco.
-- Claude Code: edição real de arquivos, commits, push.
+### Higiene de cena (Godot) — antes do commit final
 
-### Alucinação e verificação
-- Antes de apontar bug ou problema, verificar se o arquivo em disco
-  já está correto. Não assumir estado com base em mensagem anterior.
-- Nunca emitir instrução de teste sem validar contra o estado atual
-  do projeto (ex: não pedir teste via morte se a zona de respawn
-  não tem HUD).
+- Remover `print()` de debug dos scripts.
+- Remover nós temporários de teste das cenas (ex.: `DebugZoneSwitch` no `test_stage`).
+- Manter `debug_zone_switch.gd` e `DebugHUD` — ferramentas ativas de desenvolvimento.
+- Manter comentários no código.
+- **NUNCA** remover arquivos `.uid` (gerados pelo Godot, necessários).
 
-### Specs e referências
-- Specs nunca devem conter valores numéricos próprios quando a
-  instrução é "copie do original" — escolhe um ou outro, nunca os dois.
+### Comando
 
-### Prompts
-- Prompts para coworker e Claude Code devem deixar explícito
-  quem é o destinatário e o que exatamente deve ser feito.
-- Sem ambiguidade de escopo.
-
-### Limpeza de fim de sessão
-- Remover print() de debug dos scripts antes do commit final
-- Remover nós temporários de teste das cenas (ex: DebugZoneSwitch no test_stage)
-- Manter: debug_zone_switch.gd (útil enquanto zonas reais não existem)
-- Manter: DebugHUD (ferramenta ativa de desenvolvimento)
-- Manter: comentários no código
-- Nunca remover: arquivos .uid (gerados pelo Godot, necessários)
+- `#lista` → exibe o backlog de sugestões (`SUGESTOES.md`).
