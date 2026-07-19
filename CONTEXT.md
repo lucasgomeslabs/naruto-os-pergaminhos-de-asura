@@ -156,7 +156,7 @@ Nunca commitar antes da confirmação do usuário.
 - Teste aprovado: test_stage ok, **Ichiraku enquadrado** (canário da regressão da sessão 9), respawn Zona 2 + diálogo Jiraiya enquadrado, floresta sem vazamento de parallax, FPS estável. Akatsuki não testável (frames ainda não ligados — rewrite sai com a Zona 5).
 
 ### Notas de ambiente
-- **Projeto movido no disco:** repo agora em `C:\Projetos\Naruto projeto\naruto-game`; assets brutos em `C:\Projetos\Naruto projeto\naruto-game-assets-brutos` (corrige o caminho registrado no Bloco 1).
+- **Projeto movido no disco:** repo agora em `C:\Projetos\projetos-pessoais\Naruto projeto\naruto-game`; assets brutos em `C:\Projetos\projetos-pessoais\Naruto projeto\naruto-game-assets-brutos` (corrige o caminho registrado no Bloco 1).
 - **Owner do GitHub renomeado** para `lucasgomeslabs` — `git remote set-url` aplicado; URL atualizada no cabeçalho deste arquivo.
 
 ---
