@@ -1,13 +1,25 @@
-# Pergaminho de Asura — MVP de Combate & IA (Godot Engine 4.x)
+# Pergaminho de Asura — MVP de Combate & IA (Godot 4)
 
-> **Vertical Slice** focado em mecânicas estritas de combate 2D e Inteligência Artificial preditiva.
-> Engine: **Godot 4.6** (Forward Plus + Jolt Physics) — GDScript tipado, código modular, signals-first.
+> **Vertical slice** focado em mecânicas de combate 2D e IA reativa.
+> Engine: **Godot 4.6**, renderer **Compatibility** (`gl_compatibility`) — GDScript tipado, código modular, signals-first.
+
+---
+
+## Status
+
+Projeto em desenvolvimento, mantido como portfólio técnico.
+
+- **Funcional e testado:** movimentação (FSM de 12 estados), combate de 3 frentes, IA do inimigo melee, boss, sistema de diálogo, cutscenes, save em memória e transição entre zonas.
+- **Parcial:** a estrutura narrativa prevê 5 zonas lineares — 2 existem como placeholder, 3 ainda não foram criadas.
+- **Pendente:** os 13 sprites do Naruto estão no repositório mas **ainda não integrados à FSM** — o jogo roda com retângulos de placeholder fora das cutscenes. `CollectibleSystem` não implementado.
+
+A maioria das capturas deste README vem da **arena de teste** (`test_stage`), onde as formas são retângulos coloridos. Isso é método, não descuido: a FSM e o combate são validados sem arte, para que bug de gameplay não se esconda atrás de sprite. A seção *Diálogo e cutscenes* mostra a arte final.
 
 ---
 
 ## 1. Apresentação Geral
 
-**Pergaminho de Asura** é um protótipo de plataforma/ação 2D inspirado no universo Naruto. O escopo é deliberadamente apertado: um único personagem jogável, um único tipo de inimigo melee, um único cenário de teste — todos servindo a um único objetivo: **investigar profundidade em sistemas de combate e IA reativa antes de escalar conteúdo**.
+**Pergaminho de Asura** é um protótipo de plataforma/ação 2D inspirado no universo Naruto. O escopo é deliberadamente apertado — um personagem jogável, um inimigo melee, um boss, uma arena de teste — todos servindo a um objetivo: **investigar profundidade em sistemas de combate e IA reativa antes de escalar conteúdo**.
 
 A meta do MVP não é quantidade de fases ou personagens. É:
 
@@ -15,19 +27,19 @@ A meta do MVP não é quantidade de fases ou personagens. É:
 - **IA preditiva** — inimigo que detecta, persegue, **escala plataformas verticalmente** e responde a impactos com knockback direcional e stun.
 - **Arquitetura limpa** — componentes reaproveitáveis (`Hitbox` / `Hurtbox`), FSMs explícitas, signals plugáveis em zero-polling.
 
-Este repositório consolida a fase de **Core Gameplay** completa: movimentação fluida do jogador, FSM de 8 estados, sistema de combate de 3 frentes (combo melee + projétil + special com custo de chakra), HUD de debug em tempo real, kill zone com respawn, e a IA reativa do inimigo melee com gatilho de pulo preditivo.
+O repositório consolida o **Core Gameplay** — movimentação fluida, FSM de 12 estados, combate de 3 frentes (combo melee + projétil + special com custo de chakra), HUD de debug em tempo real, kill zone com respawn e IA reativa com pulo preditivo — e, sobre ele, a camada narrativa: diálogo, cutscenes, gerenciamento de zonas e persistência.
 
 ---
 
-## 2. Arquitetura & Árvore de Cenas (Scene Tree)
+## 2. Arquitetura & Árvore de Cenas
 
-A modularidade do projeto se apoia em **três pilares de isolamento**:
+A modularidade se apoia em **três pilares de isolamento**:
 
-1. **Entidades físicas** — `CharacterBody2D` para corpos com movimento próprio (Player, MeleeNinja) e `StaticBody2D` para geometria estática (Floor, Plataformas, Dummy de teste). Nenhum desses interage com a camada de combate diretamente.
-2. **Áreas reativas** — `Area2D` para todo o pipeline de detecção de impacto (`Hitbox` ofensiva, `Hurtbox` defensiva, `DetectionArea` de percepção). Vivem em layers próprias e não influenciam fisicamente o `CharacterBody2D` pai.
-3. **Camada de apresentação** — `CanvasLayer` independente para o HUD de debug, plugado diretamente nos signals do `PlayerController` (`state_changed`, `chakra_changed`) sem nenhum polling por frame.
+1. **Entidades físicas** — `CharacterBody2D` para corpos com movimento próprio (Player, MeleeNinja) e `StaticBody2D` para geometria estática (Floor, plataformas, Dummy). Nenhum interage com a camada de combate diretamente.
+2. **Áreas reativas** — `Area2D` para todo o pipeline de detecção (`Hitbox` ofensiva, `Hurtbox` defensiva, `DetectionArea` de percepção). Vivem em layers próprias e não influenciam fisicamente o `CharacterBody2D` pai.
+3. **Camada de apresentação** — `CanvasLayer` independente para o HUD, plugado nos signals do `PlayerController` (`state_changed`, `health_changed`, `chakra_changed`) sem polling por frame.
 
-### Árvore de cenas resumida
+### Árvore da arena de teste
 
 ```
 TestStage (Node2D)
@@ -37,47 +49,62 @@ TestStage (Node2D)
 │   └── Hurtbox (Area2D, layer enemy_hurtbox)
 ├── MeleeNinja (CharacterBody2D)                — IA completa
 │   ├── Visual / BodyShape / HPBar
-│   ├── Hurtbox      (Area2D, layer enemy_hurtbox)
-│   ├── Hitbox       (Area2D, layer enemy_hitbox)  — golpe melee
+│   ├── Hurtbox       (Area2D, layer enemy_hurtbox)
+│   ├── Hitbox        (Area2D, layer enemy_hitbox)   — golpe melee
 │   └── DetectionArea (Area2D, CircleShape2D r=280) — percepção
-├── Player (CharacterBody2D)                    — Naruto
-│   ├── Visual / FaceMarker / CollisionShape2D / Camera2D
-│   ├── HitboxLight    (Area2D, dmg 1)
-│   └── HitboxSpecial  (Area2D, dmg 3)
-└── DebugHUD (CanvasLayer)                      — overlay
-    └── Root → Background + VBox → StateLabel + ChakraLabel
+├── Player (CharacterBody2D, grupo "Player")    — Naruto
+│   ├── Visual / FaceMarker / ChakraSprite / CollisionShape2D / Camera2D
+│   ├── ShurikenSpawnStand / ShurikenSpawnCrouch (Marker2D)
+│   ├── HitboxLight   (Area2D, dmg 1)
+│   ├── HitboxSpecial (Area2D, dmg 3)
+│   ├── Hurtbox       (Area2D, layer player_hurtbox)
+│   └── RasengaBalloon
+└── DebugHUD (autoload, CanvasLayer)            — overlay
 ```
 
 ### Separação física × reativa × apresentação
 
-| Camada | Tipo de nó | Layer física | Responsabilidade |
+| Camada | Tipo de nó | Layer / máscara | Responsabilidade |
 |---|---|---|---|
-| Player body | `CharacterBody2D` | 1 (world) | Movimento, gravidade, colisão com floor |
-| MeleeNinja body | `CharacterBody2D` | 1 (world) | Mesmo do Player, isolado de combate |
-| Hitbox ofensiva | `Area2D` + `Hitbox.gd` | 2 (player_hitbox) ou 5 (enemy_hitbox) | Causa dano ao tocar Hurtbox |
-| Hurtbox defensiva | `Area2D` + `Hurtbox.gd` | 3 (enemy_hurtbox) | Recebe e repassa o hit via signal |
-| DetectionArea | `Area2D` | mask=1 + filtro por classe | Percepção do Player |
-| DebugHUD | `CanvasLayer` + `Control` | — (sem física) | UI em screen-space, signals-driven |
+| Player body | `CharacterBody2D` | layer **8** `player_body`, mask 1 | Movimento, gravidade, colisão com o mundo |
+| MeleeNinja body | `CharacterBody2D` | layer **7** `enemy_body`, mask 1 | Idem, isolado da camada de combate |
+| Hitbox ofensiva | `Area2D` + `hitbox.gd` | layer **2** `player_hitbox` / **5** `enemy_hitbox` | Causa dano ao tocar uma Hurtbox |
+| Hurtbox defensiva | `Area2D` + `hurtbox.gd` | layer **3** `enemy_hurtbox` / **6** `player_hurtbox` | Recebe e repassa o hit via signal |
+| DetectionArea | `Area2D` | mask **8** `player_body` | Percepção do Player |
+| DebugHUD | `CanvasLayer` + `Control` | — (sem física) | UI screen-space, signals-driven |
+
+Cada par ofensivo/defensivo enxerga apenas o seu oposto: a hitbox do Player mascara `enemy_hurtbox`; a do inimigo mascara `player_hurtbox`. Corpos e áreas nunca se cruzam.
+
+### FSM do Player — 12 estados
+
+`IDLE · MOVE · JUMP · FALL · CROUCH · DASH · WALL_SLIDE · ATTACK · SPECIAL · CHAKRA_CHARGE · HURT · DEATH`
+
+![Estado WALL_SLIDE](documentation/capturas/wall-slide.png)
+*Arena de teste — estado `WALL_SLIDE`: gravidade reduzida ao segurar a direção contra a parede, com recarga do double jump e wall jump disponível.*
+
+![Estado DASH](documentation/capturas/dash.png)
+*Arena de teste — estado `DASH`, disparado por double-tap na direção: override horizontal, i-frames e gravidade suspensa durante a janela.*
 
 ### Responsabilidades por script
 
 | Script | Responsabilidade |
 |---|---|
-| `player_controller.gd` | FSM do jogador (8 estados), física, input, chakra, kill zone. |
-| `melee_ninja.gd` | FSM do inimigo (6 estados), percepção, pulo AI preditivo. |
-| `hitbox.gd` | Componente Area2D ofensivo reusável (`damage`, signal `hit_landed`). |
-| `hurtbox.gd` | Componente Area2D defensivo reusável (`take_hit` → signal `hit_taken`). |
+| `player_controller.gd` | FSM do jogador (12 estados), física, input, chakra, kill zone. |
+| `melee_ninja.gd` | FSM do inimigo (6 estados), percepção, pulo preditivo. |
+| `zabuza.gd` | FSM do boss (9 estados). |
+| `hitbox.gd` | Componente `Area2D` ofensivo reusável (`damage`, signal `hit_landed`). |
+| `hurtbox.gd` | Componente `Area2D` defensivo reusável (`take_hit` → signal `hit_taken`). |
 | `shuriken.gd` | Projétil que **estende** `Hitbox` — movimento próprio + auto-destruct. |
 | `dummy.gd` | Alvo passivo de testes — recebe hits, flasha, respawna. |
-| `debug_hud.gd` | Plugado em `state_changed` + `chakra_changed`, zero polling. |
+| `debug_hud.gd` | Plugado em `state_changed`, `health_changed`, `chakra_changed`. Zero polling. |
 
 ---
 
 ## 3. Sistemas de Combate e Recursos
 
-### Combo Leve (Tecla **J**) — 3 hits encadeados com micro-dash automático
+### Combo Leve (**J**) — 3 hits encadeados com micro-dash automático
 
-O combo opera dentro de uma **cancel window** definida pelo último 25% da duração de cada ataque (`attack_cancel_window_ratio = 0.25`). Apertar **J** novamente dentro dessa janela reentra o estado `ATTACK` aplicando um **micro-impulso de `velocity.x = 250 px/s * facing_direction`** (decai pela friction natural em ~5 frames), dando ao Naruto um leve "tranco" pra frente a cada hit conectado.
+O combo opera dentro de uma **cancel window** definida pelo último 25% da duração de cada ataque (`attack_cancel_window_ratio = 0.25`). Apertar **J** novamente dentro dessa janela reentra o estado `ATTACK` aplicando um **micro-impulso de `velocity.x = 250 px/s * facing_direction`** (decai pela friction em ~5 frames), dando ao Naruto um leve "tranco" a cada hit conectado.
 
 | Hit | Custo de chakra | Damage | Ganho de terreno por dash |
 |---|---|---|---|
@@ -88,9 +115,12 @@ O combo opera dentro de uma **cancel window** definida pelo último 25% da dura�
 
 A FSM faz `_exit_state(State.ATTACK)` + `_enter_state(State.ATTACK)` manualmente, **sem** passar pelo `_change_state` (que bloqueia transições mesmo→mesmo), reciclando hitbox, signals `attack_started`/`attack_ended` e o `_state_timer`.
 
-### Shuriken (Tecla **K**) — projétil físico com alcance limitado
+![Dano aplicado no inimigo](documentation/capturas/hit-feedback.png)
+*Arena de teste — hit conectado: a barra de vida do MeleeNinja recua e o feedback de impacto dispara. O pipeline `Hitbox → Hurtbox → take_hit → hit_taken` fecha em um frame.*
 
-`Shuriken` estende `Hitbox` e é spawnada como sibling do Player no momento do arremesso. Auto-destrói após **600 px** de distância percorrida OU ao atingir uma `Hurtbox` válida.
+### Shuriken (**K**) — projétil físico com alcance limitado
+
+`Shuriken` estende `Hitbox` e é spawnada como sibling do Player no momento do arremesso, a partir de `ShurikenSpawnStand` ou `ShurikenSpawnCrouch`. Auto-destrói após **600 px** percorridos OU ao atingir uma `Hurtbox` válida.
 
 | Parâmetro | Valor |
 |---|---|
@@ -100,11 +130,14 @@ A FSM faz `_exit_state(State.ATTACK)` + `_enter_state(State.ATTACK)` manualmente
 | Velocidade de voo | 800 px/s |
 | Spin visual | 12 rad/s |
 
-A direção é setada por `direction = Vector2(facing_direction, 0)` no spawn, **antes** de adicionar à árvore — garantindo que o `_physics_process` do projétil já comece com o vetor correto.
+A direção é setada por `direction = Vector2(facing_direction, 0)` **antes** de adicionar à árvore — garantindo que o `_physics_process` do projétil já comece com o vetor correto.
 
-### Rasengan (Tecla **O**) — special com dash melee
+![Shuriken em voo](documentation/capturas/shuriken.png)
+*Arena de teste — shuriken em trajetória, com o chakra em 62% após o custo de 40 ser debitado.*
 
-O `State.SPECIAL` aplica um impulso `velocity.x = 1300 * facing_direction` no momento do `_enter_state`, fazendo o Naruto **avançar cerca de 264 px** em direção ao alvo antes de descarregar a `HitboxSpecial` (raio 45 px, damage 3). A friction natural do chão decai o dash em ~0.41s.
+### Rasengan (**O**) — special com dash melee
+
+O `State.SPECIAL` aplica um impulso `velocity.x = 1300 * facing_direction` no `_enter_state`, fazendo o Naruto **avançar cerca de 264 px** em direção ao alvo antes de descarregar a `HitboxSpecial` (raio 45 px, damage 3). A friction do chão decai o dash em ~0.41s.
 
 | Parâmetro | Valor |
 |---|---|
@@ -113,74 +146,77 @@ O `State.SPECIAL` aplica um impulso `velocity.x = 1300 * facing_direction` no mo
 | Dash inicial | 1300 px/s |
 | Alcance total efetivo | ~360 px |
 
+![Rasengan em execução](documentation/capturas/rasengan.png)
+*Arena de teste — `SPECIAL` executado: o chakra caiu para 21% (custo 70) e o `RasengaBalloon` acompanha o Player em world-space, não em screen-space.*
+
 ### Gerenciamento dinâmico de Chakra
 
-A barra de 0–100 é o recurso central do combate. Os custos altos (40 / 70) impõem uma **decisão tática contínua**: stockar pra Rasengan ou gastar em shurikens?
+A barra de 0–100 é o recurso central do combate. Os custos altos (40 / 70) impõem uma **decisão tática contínua**: estocar para o Rasengan ou gastar em shurikens?
 
 | Fonte | Variação |
 |---|---|
-| Regen passiva (sempre que não estiver em `CHAKRA_CHARGE`) | **+8/s** |
-| `chakra_charge` (segurar Shift Esq.) | +35/s (full bar em ~12.5s, 70 chakra em ~2s) |
-| Shuriken (J) | **−40** |
-| Rasengan (L) | **−70** |
+| Regen passiva (fora de `CHAKRA_CHARGE`) | **+8/s** |
+| `chakra_charge` (segurar Shift Esq.) | +35/s (barra cheia em ~12.5s; 70 de chakra em ~2s) |
+| Shuriken (**K**) | **−40** |
+| Rasengan (**O**) | **−70** |
 
-Com max 100, a barra cheia comporta **1 Rasengan + 0.75 shuriken**, OU **2 shurikens com 20 sobrando**, OU 1 Rasengan + breve `chakra_charge` pra outro recurso. **Sempre tem que escolher**.
+Com máximo 100, a barra cheia comporta **1 Rasengan + 0.75 shuriken**, OU **2 shurikens com 20 sobrando**, OU 1 Rasengan + um breve `chakra_charge` para outro recurso. **Sempre há uma escolha.**
 
 ---
 
-## ⚔️ Dinâmica de Combate em Ação (Exemplo Prático)
+## Dinâmica de Combate em Ação
 
 ![Execução e Queda na Kill Zone](documentation/capturas/Precip%C3%ADcio_Hud.png)
-*Legenda: O MeleeNinja aplicando um golpe na beira do precipício, ativando o hitstun do Player e resultando em queda livre em direção à kill zone.*
+*Arena de teste — o MeleeNinja golpeia na beira do precipício, ativando o hitstun e resultando em queda livre até a kill zone.*
 
-Este frame congela o instante em que **todos os subsistemas cooperam sem nenhum scripting específico** pra produzir uma situação emergente. O MeleeNinja perseguiu o Player até a borda do mapa em CHASE, entrou na fase `active` do ATTACK, e a hitbox conectou. O `_take_damage()` no `PlayerController` então executou a única linha que define o resultado dramático:
+Este frame congela o instante em que **todos os subsistemas cooperam sem nenhum scripting específico** para produzir uma situação emergente. O MeleeNinja perseguiu o Player até a borda em CHASE, entrou na fase `active` do ATTACK, e a hitbox conectou. O `_take_damage()` então executou a linha que define o resultado:
 
 ```gdscript
 var knockback_dir: float = signf(global_position.x - source_position.x)
 velocity.x = hurt_knockback_speed * knockback_dir
 ```
 
-Como o ninja estava à esquerda do jogador, `signf` retornou `+1`, e o knockback de **350 px/s empurrou o Player pra direita** — exatamente em direção ao precipício. O `_change_state(State.HURT)` trancou o input por 0.4s de hitstun (com mais 0.4s de i-frames em sequência), e o Player atravessou a borda do chão antes de poder reagir. A partir daí: `_check_kill_zone()` detectou `position.y > 1000`, disparou `_respawn()` → `get_tree().reload_current_scene()`, e o ciclo reiniciou limpo.
+Como o ninja estava à esquerda, `signf` retornou `+1`, e o knockback de **350 px/s empurrou o Player para a direita** — em direção ao precipício. O `_change_state(State.HURT)` trancou o input por 0.4s de hitstun (mais 0.4s de i-frames em sequência), e o Player atravessou a borda antes de poder reagir. A partir daí: `_check_kill_zone()` detectou `position.y > 1000`, disparou `_respawn()` → `get_tree().reload_current_scene()`, e o ciclo reiniciou limpo.
 
-O ponto técnico importante é que **o knockback não é decorativo — ele é geográfico**. Ao se basear na posição relativa do atacante em vez de uma direção fixa ou aleatória, o efeito reage organicamente à geometria do mundo. Uma plataforma alta com borda exposta se torna automaticamente uma situação de perigo letal **sem que o level design precise inserir trigger zones ou cutscenes**. O combate "perigoso" emerge da combinação entre física, knockback direcional e a kill zone universal compartilhada por Player e MeleeNinja.
+O ponto técnico é que **o knockback não é decorativo — ele é geográfico**. Ao se basear na posição relativa do atacante em vez de uma direção fixa, o efeito reage à geometria do mundo. Uma plataforma com borda exposta vira automaticamente uma situação letal **sem que o level design precise inserir trigger zones**. O combate perigoso emerge da combinação entre física, knockback direcional e kill zone compartilhada por Player e MeleeNinja.
 
 ---
 
 ## Painel de Debug e Ciclo de Vida
 
-Os três frames abaixo mapeiam o ciclo completo da máquina de estados e do `DebugHUD` reativo durante o pipeline de dano. Toda label do HUD é atualizada via signals (`state_changed`, `health_changed`, `chakra_changed`) — **zero polling por frame** — e o `_ready()` da HUD inclui guardas defensivas contra `null instance` + sincronização manual dos valores iniciais. Mesmo após o reload completo da árvore (`reload_current_scene()`), o painel reinicializa sem warnings no console.
+Os três frames abaixo mapeiam o ciclo completo da máquina de estados e do `DebugHUD` reativo durante o pipeline de dano. Toda label é atualizada via signals (`state_changed`, `health_changed`, `chakra_changed`) — **zero polling por frame** — e o `_ready()` inclui guardas defensivas contra `null instance` + sincronização manual dos valores iniciais. Mesmo após o reload completo da árvore, o painel reinicializa sem warnings no console.
 
 ![HUD Sincronizado](documentation/capturas/02_hud_inicial.png)
-*Legenda: Estado inicial IDLE com DebugHUD sincronizado e blindado (Vida 5/5).*
+*Arena de teste — estado inicial IDLE com o DebugHUD sincronizado e blindado (Vida 5/5).*
 
-O frame inicial mostra o HUD em seu estado canônico imediatamente após o `_ready()` do `DebugHUD`. O nó `_player` é resolvido via `get_node_or_null(player_path) as PlayerController`, os três signals do `PlayerController` são conectados, e os handlers `_on_state_changed`, `_on_health_changed` e `_on_chakra_changed` são invocados **manualmente** com os valores iniciais do Player — garantindo sincronia mesmo que a primeira emissão de signal já tenha ocorrido antes do `connect()`. Se o `player_path` retornar `null` por qualquer motivo (ordem de `_ready` invertida, cena ainda carregando, refactor futuro de hierarquia), o `push_warning` dispara, as três labels exibem o fallback `"—"`, e a HUD permanece visível em vez de quebrar a cena inteira.
+O frame mostra o HUD em seu estado canônico após o `_ready()`. Os signals do `PlayerController` são conectados e os handlers `_on_state_changed`, `_on_health_changed` e `_on_chakra_changed` são invocados **manualmente** com os valores iniciais — garantindo sincronia mesmo que a primeira emissão tenha ocorrido antes do `connect()`. Se a referência do Player retornar `null` (ordem de `_ready` invertida, cena carregando, refactor de hierarquia), o `push_warning` dispara, as labels exibem o fallback `"—"`, e a HUD permanece visível em vez de quebrar a cena.
 
 ![Naruto no Estado HURT](documentation/capturas/03_player_hurt.png)
-*Legenda: Pipeline de dano em ação. Naruto no estado HURT sofrendo o tranco horizontal (Vida 4/5).*
+*Arena de teste — pipeline de dano em ação: Naruto em HURT sofrendo o tranco horizontal (Vida 4/5).*
 
 O pipeline `Hitbox → Hurtbox → take_hit → _on_hit_taken → _take_damage → _change_state(HURT)` acabou de fechar. A transição emite simultaneamente:
 
-- `health_changed(4, 5)` → o handler atualiza a label vermelha pra `"Vida: 4 / 5 (80%)"`
-- `state_changed(MOVE, HURT)` → o handler atualiza a label amarela pra `"Estado: HURT"`
+- `health_changed(4, 5)` → label vermelha para `"Vida: 4 / 5 (80%)"`
+- `state_changed(MOVE, HURT)` → label amarela para `"Estado: HURT"`
 
-Internamente, o `_enter_state(HURT)` setou `_state_timer = hurt_stun_duration (0.4s)` e `_invulnerability_timer = invulnerability_duration (0.8s)`, desligou as hitboxes ofensivas do Player (defesa contra hit mid-attack que deixaria um swing órfão), e o knockback horizontal aplicado em `_take_damage` está decaindo pela friction natural. **Nenhum input é lido durante o estado** — o `_state_hurt(delta)` chama apenas `_apply_horizontal_movement(delta, 0.0)`, sem nenhum dos helpers `_try_start_*`. O bloqueio de comandos é uma propriedade emergente da própria FSM, não uma flag manual.
+Internamente, `_enter_state(HURT)` setou `_state_timer = hurt_stun_duration (0.4s)` e `_invulnerability_timer = invulnerability_duration (0.8s)`, desligou as hitboxes ofensivas (defesa contra hit mid-attack que deixaria um swing órfão), e o knockback decai pela friction. **Nenhum input é lido durante o estado** — `_state_hurt(delta)` chama apenas `_apply_horizontal_movement(delta, 0.0)`. O bloqueio de comandos é propriedade emergente da FSM, não uma flag manual.
 
 ![Estado de Morte do Player](documentation/capturas/04_player_death.png)
-*Legenda: Naruto no estado DEATH (HP: 0/5) iniciando o freeze de 1.5s antes do reload completo da engine.*
+*Arena de teste — Naruto em DEATH (HP 0/5), iniciando o freeze de 1.5s antes do reload.*
 
-A vida zerou. O `_take_damage` detectou `current_health <= 0` **antes** de aplicar o knockback (early-return que curto-circuita pra evitar o tranco visualmente "engolido" pela morte) e chamou `_change_state(State.DEATH)`. O `_enter_state(DEATH)` zerou `velocity`, setou `_state_timer = death_respawn_delay (1.5s)`, desligou as hitboxes do Player, emitiu o signal `player_died` (gancho pra futuros sistemas de áudio/VFX de game over) e travou input. O `_state_death(delta)` está rodando agora: friction decai qualquer velocity residual, timer conta regressivamente. Quando chegar a zero, `_respawn()` é chamado e dispara `get_tree().reload_current_scene()` — **toda a fase rebuilda do zero**: MeleeNinja, Dummy, plataformas, signals, HUD. O Player que aparece em seguida é uma instância nova, com signals limpos conectados em ordem natural pelo `_ready()` da nova HUD.
+A vida zerou. O `_take_damage` detectou `current_health <= 0` **antes** de aplicar o knockback (early-return que evita o tranco visualmente "engolido" pela morte) e chamou `_change_state(State.DEATH)`. O `_enter_state(DEATH)` zerou `velocity`, setou `_state_timer = death_respawn_delay (1.5s)`, desligou as hitboxes, emitiu `player_died` (gancho para áudio/VFX futuros) e travou input. Quando o timer zera, `_respawn()` dispara `get_tree().reload_current_scene()` — **a fase inteira rebuilda**: MeleeNinja, Dummy, plataformas, signals, HUD.
 
-A robustez deste ciclo se apoia em três princípios arquiteturais estabelecidos desde a Semana 1:
+A robustez do ciclo se apoia em três princípios:
 
-- **Signals-first**: ninguém faz polling por frame. Mudanças disparam emissões; listeners reagem em callback. A HUD não precisa nem saber que o Player existe entre updates — ela só recalcula labels quando algo muda.
-- **Reload completo em vez de reset local**: o `reload_current_scene()` substituiu o antigo `_respawn()` que fazia reset por código (posição, HP, chakra, timers, contadores de pulo). Elimina qualquer chance de estado vazado entre vidas — timer preso, hitbox esquecida ligada, signal duplamente conectado.
-- **Guardas defensivas no `_ready`**: cada referência inter-nó passa por `get_node_or_null` + cast tipado + early return + fallback visual. Sem `null instance` no console mesmo em corridas de inicialização atípicas.
+- **Signals-first** — ninguém faz polling. Mudanças disparam emissões; listeners reagem em callback.
+- **Reload completo em vez de reset local** — elimina estado vazado entre vidas (timer preso, hitbox esquecida ligada, signal duplamente conectado).
+- **Guardas defensivas no `_ready`** — cada referência inter-nó passa por `get_node_or_null` + cast tipado + early return + fallback visual.
 
 ---
 
-## 4. Máquina de Estados Finitas (FSM) do Inimigo
+## 4. Máquina de Estados do Inimigo
 
-O `MeleeNinja.gd` implementa uma FSM enum-based com **6 estados** e signal `state_changed(previous, new)` plugável em UI, áudio e VFX futuros.
+O `melee_ninja.gd` implementa uma FSM enum-based com **6 estados** e signal `state_changed(previous, new)` plugável em UI, áudio e VFX.
 
 ### Diagrama de transições
 
@@ -190,14 +226,14 @@ O `MeleeNinja.gd` implementa uma FSM enum-based com **6 estados** e signal `stat
         └────┬─────┘
              │ (timer 0.5–1.5s aleatório expira)
         ┌────▼─────┐
-        │  PATROL  │   movimentação a patrol_speed=80 px/s
-        └────┬─────┘   dentro de patrol_distance=220 px do spawn
+        │  PATROL  │   patrol_speed = 80 px/s
+        └────┬─────┘   dentro de patrol_distance = 220 px do spawn
              │
              │ (player entra na DetectionArea)
         ┌────▼─────┐
-        │  CHASE   │   movimentação a chase_speed=160 px/s, facing dinâmico
+        │  CHASE   │   chase_speed = 160 px/s, facing dinâmico
         └────┬─────┘
-             │ (|distância horizontal| < attack_range=60 + cooldown ok)
+             │ (|distância horizontal| < attack_range = 60 + cooldown ok)
         ┌────▼─────┐
         │  ATTACK  │   windup(0.30s) → active(0.15s) → recovery(0.35s)
         └────┬─────┘   + cooldown(0.8s)
@@ -218,15 +254,15 @@ O `MeleeNinja.gd` implementa uma FSM enum-based com **6 estados** e signal `stat
 
 ### IDLE — pausa orgânica entre pernas de patrol
 
-Velocidade horizontal decai por friction (`move_toward(velocity.x, 0.0, ground_friction * delta)`). Um timer aleatório no intervalo `[patrol_pause_min, patrol_pause_max]` segura o inimigo no lugar, dando personalidade de "olhar pros lados antes de andar de novo".
+Velocidade horizontal decai por friction (`move_toward(velocity.x, 0.0, ground_friction * delta)`). Um timer aleatório em `[patrol_pause_min, patrol_pause_max]` segura o inimigo no lugar, dando personalidade de "olhar em volta antes de andar de novo".
 
 ### PATROL — vai-e-vem em torno do spawn
 
-Caminha a **80 px/s** em `facing_direction`. Quando `position.x - _spawn_position.x` ultrapassa `patrol_distance=220` em módulo, OU quando `is_on_wall()` retorna true (esbarrou em geometria), o inimigo **vira o nariz** e transiciona pra `IDLE`. Esse ciclo `PATROL → IDLE → PATROL` repete indefinidamente até o jogador aparecer.
+Caminha a **80 px/s** em `facing_direction`. Quando `position.x - _spawn_position.x` ultrapassa `patrol_distance = 220` em módulo, OU quando `is_on_wall()` retorna true, o inimigo **vira** e transiciona para `IDLE`. O ciclo `PATROL → IDLE → PATROL` repete até o jogador aparecer.
 
 ### CHASE — perseguição reativa por frame
 
-Recalcula `horizontal_distance = _player.global_position.x - global_position.x` a cada `_physics_process`, atualiza `facing_direction` para apontar pro jogador, e aplica `velocity.x = chase_speed * facing_direction`. Se a distância horizontal cai abaixo de `attack_range=60 px` E `_attack_cooldown_timer` está zerado, transiciona pra `ATTACK`.
+Recalcula `horizontal_distance` a cada `_physics_process`, atualiza `facing_direction` para apontar ao jogador e aplica `velocity.x = chase_speed * facing_direction`. Se a distância cai abaixo de `attack_range = 60 px` **E** `_attack_cooldown_timer` está zerado, transiciona para `ATTACK`.
 
 ### ATTACK — três fases internas + cooldown externo
 
@@ -239,11 +275,11 @@ match _attack_phase:
     "recovery": if _state_timer <= 0: → set cooldown + back to CHASE/PATROL
 ```
 
-A telegrafia de **0.30s no windup** dá ao jogador uma janela clara para reagir — esquivar, contra-atacar com Rasengan ou disparar uma shuriken na cara antes do impacto. Esse design escolhe **legibilidade** acima de "pegadinhas de timing".
+A telegrafia de **0.30s no windup** dá ao jogador uma janela clara para reagir — esquivar, contra-atacar com Rasengan ou disparar uma shuriken antes do impacto. O design escolhe **legibilidade** acima de "pegadinhas de timing".
 
-### Sistema de Percepção — Area2D circular
+### Sistema de Percepção — `Area2D` circular
 
-A `DetectionArea` é uma `Area2D` com `CircleShape2D` (raio 280 px) e `collision_mask = 1` (layer world). Captura qualquer body em layer 1 e filtra por classe no script:
+A `DetectionArea` é uma `Area2D` com `CircleShape2D` (raio **280 px**) e `collision_mask` apontando para a layer **8 (`player_body`)** — dedicada ao corpo do jogador. O callback ainda revalida o tipo antes de assumir o alvo:
 
 ```gdscript
 func _on_body_entered_detection(body: Node2D) -> void:
@@ -253,17 +289,15 @@ func _on_body_entered_detection(body: Node2D) -> void:
             _change_state(State.CHASE)
 ```
 
-Filtrar via `is PlayerController` em vez de criar uma layer `player_body` dedicada mantém o `collision_layer` do Player intacto (já validado em vários ciclos de combate). Trade-off favorável: zero refactor para um overhead irrelevante de descartar o floor e o dummy no callback.
+A máscara dedicada já restringe o que entra na área; a checagem `is PlayerController` permanece como **redundância defensiva**, garantindo o cast seguro antes de guardar a referência.
 
 ---
 
 ## 5. IA de Movimentação Vertical — Pulo Preditivo no CHASE
 
-A IA do `MeleeNinja` ganhou um **gatilho de pulo dentro do estado CHASE** para impedir que o jogador escape verticalmente subindo em plataformas flutuantes.
+A IA do `MeleeNinja` tem um **gatilho de pulo dentro do CHASE** para impedir que o jogador escape verticalmente subindo em plataformas.
 
 ### Condição de gatilho — três checks em AND lógico
-
-Avaliados a cada frame em `_state_chase`:
 
 ```gdscript
 if is_on_floor() and is_on_wall() and _player.global_position.y < global_position.y - 50.0:
@@ -272,39 +306,39 @@ if is_on_floor() and is_on_wall() and _player.global_position.y < global_positio
 
 | Verificação | Significado |
 |---|---|
-| `is_on_floor()` | Inimigo está grounded — só pula a partir de superfície sólida. |
-| `is_on_wall()` | Há **barreira física à frente** — está esbarrando lateralmente na quina de uma plataforma ou em uma parede. |
-| `_player.global_position.y < global_position.y - 50.0` | Player está **significativamente acima** (margem de 50 px) — vale a pena gastar o pulo. |
+| `is_on_floor()` | Inimigo grounded — só pula de superfície sólida. |
+| `is_on_wall()` | Há **barreira física à frente** — esbarrando na quina de uma plataforma ou parede. |
+| `_player.global_position.y < global_position.y - 50.0` | Player **significativamente acima** (margem de 50 px) — vale gastar o pulo. |
 
-A condição só dispara quando as três são `true` **simultaneamente**. Após o pulo, `is_on_floor()` retorna `false` (inimigo no ar) e a condição falha automaticamente — **sem necessidade de cooldown explícito ou flag anti-spam**.
+A condição só dispara com as três `true` **simultaneamente**. Após o pulo, `is_on_floor()` retorna `false` e a condição falha sozinha — **sem cooldown explícito nem flag anti-spam**.
 
-### Verificação de barreira física via `is_on_wall()`
+### Verificação de barreira via `is_on_wall()`
 
-A leitura é feita pelo próprio motor do Godot — `CharacterBody2D` mantém o flag interno após cada `move_and_slide()`. Quando o ninja em PATROL ou CHASE encosta lateralmente em uma plataforma flutuante (a parte de baixo é tratada como "wall" pelo solver porque a normal da colisão é vertical), o flag fica `true` por aquele frame.
+A leitura vem do próprio motor — `CharacterBody2D` mantém o flag interno após cada `move_and_slide()`. Quando o ninja encosta lateralmente em uma plataforma flutuante (a parte de baixo é tratada como "wall" pelo solver, porque a normal da colisão é vertical), o flag fica `true` naquele frame.
 
-Combinado com a leitura de `_player.global_position.y`, o inimigo só pula quando **há uma plataforma física a sua frente E o jogador está em cima dela** — comportamento que parece intencional e proposital, não aleatório.
+Combinado com a leitura de `_player.global_position.y`, o inimigo só pula quando **há plataforma à frente E o jogador está em cima dela** — comportamento que parece proposital, não aleatório.
 
-### Matemática da subida — calibrado com a gravidade
+### Matemática da subida — calibrada com a gravidade
 
 Com `enemy_jump_velocity = -650` e `GRAVITY = 1400`:
 
-- **Pico vertical**: 650² / (2 · 1400) ≈ **151 px** acima da posição inicial.
-- **Duração total do arco** (subida + descida): 2 · 650 / 1400 ≈ **0.93 s**.
-- **Cobertura horizontal durante o pulo**: `chase_speed (160 px/s) × 0.93 s` ≈ **149 px**.
+- **Pico vertical**: 650² / (2 · 1400) ≈ **151 px**.
+- **Duração do arco** (subida + descida): 2 · 650 / 1400 ≈ **0.93 s**.
+- **Cobertura horizontal no pulo**: 160 px/s × 0.93 s ≈ **149 px**.
 
 ### Escalada progressiva entre plataformas
 
-O ninja **não tem pathfinding global** — apenas reage às condições locais. Mesmo assim, isso é suficiente para escalar todas as plataformas do `test_stage` em sequência:
+O ninja **não tem pathfinding global** — só reage a condições locais. Ainda assim, escala todas as plataformas do `test_stage` em sequência:
 
 | De | Para | Altura (px) | Cabe num pulo? |
 |---|---|---|---|
-| Chão (y=368) | PlatformA top (y=268) | 100 | Sim — sobra 51 px |
-| PlatformA | PlatformB top (y=168) | 100 | Sim — mesma margem |
-| PlatformB | PlatformC top (y=88) | 80 | Sim — confortável |
+| Chão (y=368) | PlatformA (y=268) | 100 | Sim — sobra 51 px |
+| PlatformA | PlatformB (y=168) | 100 | Sim — mesma margem |
+| PlatformB | PlatformC (y=88) | 80 | Sim — confortável |
 
 ### Compatibilidade com a trava de gravidade
 
-A ordem das operações em `_physics_process` é o que faz o pulo funcionar **mesmo com `velocity.y = 0.0` sendo aplicado por `_apply_gravity` em todo frame on-floor**:
+A ordem das operações em `_physics_process` é o que faz o pulo funcionar **mesmo com `velocity.y = 0.0` aplicado por `_apply_gravity` a todo frame on-floor**:
 
 ```
 1. _apply_gravity(delta)         ← zera velocity.y se on_floor
@@ -314,19 +348,93 @@ A ordem das operações em `_physics_process` é o que faz o pulo funcionar **me
 5. move_and_slide()              ← move o corpo com o impulso intacto
 ```
 
-O estado roda **depois** da gravidade, então a atribuição `velocity.y = enemy_jump_velocity` no `_state_chase` **sobrescreve** o zero. Sem conflito de prioridade.
+O estado roda **depois** da gravidade, então a atribuição sobrescreve o zero. Sem conflito de prioridade.
 
 ---
 
-## 6. Post-Mortem de Bugs Críticos
+## 6. Camada Narrativa — Diálogo, Cutscenes e Progressão
 
-A integração da IA passou por dois bugs de física **não-triviais** durante o desenvolvimento. Ambos foram diagnosticados e resolvidos com correções cirúrgicas. Documentação detalhada da raiz e da solução abaixo.
+Sobre o núcleo de combate, o projeto construiu a camada que sustenta a progressão. Todos os sistemas abaixo estão implementados.
+
+### Autoloads
+
+| Autoload | Arquivo | Papel |
+|---|---|---|
+| `LevelManager` | `scripts/systems/level_manager.gd` | Transição entre zonas e respawn central (`RESPAWN_ZONE = zona_2`). |
+| `DialogueManager` | `scripts/systems/dialogue_manager.gd` | Fila de falas, avanço e o signal `line_advanced(index)`. |
+| `SaveSystem` | `scripts/systems/save_system.gd` | Snapshot em memória de HP, chakra e pergaminhos. |
+| `DebugHUD` | `scenes/ui/debug_hud.tscn` | Overlay de debug; reconecta ao Player via `node_added` + grupo `"Player"`. |
+
+### DialogueSystem
+
+`DialogueManager` (autoload) + `DialogueBox` (UI). O diálogo **pausa o jogo** (`get_tree().paused = true`), e a `DialogueBox` roda com `process_mode = ALWAYS` para continuar respondendo enquanto tudo mais está congelado.
+
+A caixa segue estética de mangá — fundo branco com borda colorida por personagem:
+
+| Personagem | Cor da borda |
+|---|---|
+| Naruto | laranja |
+| Jiraiya | verde |
+| Pain | roxo |
+| Konan | azul |
+| Tobi | laranja escuro |
+| *(desconhecido)* | `DEFAULT_COLOR` (preto) |
+
+O `DialogueTrigger` é um `Area2D` com dois modos: **AUTO** (dispara ao entrar na área) e **INTERACTION** (exige input do jogador).
+
+### Cutscenes
+
+As cutscenes reagem ao signal `DialogueManager.line_advanced(index)` para **trocar texturas em sincronia com a fala** — a imagem muda conforme o diálogo avança, sem timeline própria.
+
+- **Ichiraku** — integrada e testada. É uma **sub-scene da Zona 4**, não um `change_scene_to_file`: o Player permanece na árvore, preservando estado.
+- **Akatsuki** — integrada. Abre com o frame A (Pain, mão na cabeça) e troca para o frame B na segunda linha. Um rewrite para 3 beats (intro → facepalm → kamui) está planejado junto com a construção da Zona 5.
+
+![Cutscene do Ichiraku](documentation/capturas/dialogo-ichiraku.png)
+*Arte final — cutscene do Ichiraku com a `DialogueBox` em estilo mangá e a borda colorida identificando quem fala. Diferente das capturas anteriores, aqui não há placeholder: é o alvo visual do projeto (arte desenhada / cel-shaded).*
+
+### Componentes de transição
+
+- **`FadeTransition`** — componente genérico com `fade(callback)` e signal `fade_completed`, duração padrão 0.5s. Desacopla o efeito de quem o usa.
+- **`KamuiTrigger`** — ativo em `akatsuki_hideout`; resolve o Player pelo grupo `"Player"`, com fallback via `get_nodes_in_group`.
+- **`RasengaBalloon`** — balão de fala do Rasengan em **world-space** (filho do Player), não screen-space: acompanha a câmera junto com o personagem.
+
+### Boss — Zabuza
+
+`zabuza.gd` implementa o `BossController` com FSM de **9 estados**, seguindo o mesmo padrão enum-based + signals do inimigo comum.
+
+![Boss Zabuza](documentation/capturas/zabuza.png)
+*Arena de teste — o boss Zabuza. Como o restante do combate, a FSM foi construída e validada sobre formas primitivas antes de qualquer arte.*
+
+![Zabuza em ataque melee](documentation/capturas/zabuza_melee.png)
+*Arena de teste — fase de ataque melee do boss.*
+
+### Persistência
+
+`SaveSystem` mantém um snapshot **em memória** de HP, chakra e pergaminhos, com API `save()`, `load_into()`, `reset()` e `has_data()`. O `load_into()` reemite `health_changed` e `chakra_changed` no Player após restaurar — sincronizando a HUD sem esperar a próxima emissão natural. Não há gravação em disco: a persistência cobre a travessia entre zonas, não entre execuções.
+
+### Estrutura do jogo — 5 zonas lineares
+
+| Zona | Cena | Status |
+|---|---|---|
+| 1 | `zona_1_floresta_morte.tscn` | não criada |
+| 2 | `zona_2_casa_central.tscn` | placeholder + `JiraiyaTrigger` AUTO |
+| 3 | `zona_3_arvores_gigantes.tscn` | não criada |
+| 4 | `zona_4_aldeia_corredor.tscn` | não criada (cutscene do Ichiraku pronta para encaixar) |
+| 5 | `floresta_da_nevoa.tscn` | placeholder da Zona 5 (cutscene Akatsuki pronta) |
+
+Regra de progressão fechada: **morte → respawn sempre na Zona 2**, independente da zona atual. Sem checkpoints.
+
+---
+
+## 7. Post-Mortem de Bugs Críticos
+
+A integração da IA passou por dois bugs de física **não-triviais**. Ambos foram diagnosticados e resolvidos com correções cirúrgicas.
 
 ### Bug 1 — *Jittering* (micro-quiques verticais no chão)
 
-**Sintoma**: o `MeleeNinja` em estados `IDLE` e `PATROL` vibrava verticalmente (~1–2 px) cada frame, **mesmo parado em superfície totalmente plana**. O Player, usando `CharacterBody2D` idêntico, não sofria do mesmo problema.
+**Sintoma**: o `MeleeNinja` em `IDLE` e `PATROL` vibrava verticalmente (~1–2 px) a cada frame, **mesmo parado em superfície plana**. O Player, com `CharacterBody2D` idêntico, não sofria do mesmo problema.
 
-**Diagnóstico**: o método `_apply_gravity` original retornava cedo quando `is_on_floor()` era `true`, **sem zerar `velocity.y`**:
+**Diagnóstico**: o `_apply_gravity` original retornava cedo quando `is_on_floor()` era `true`, **sem zerar `velocity.y`**:
 
 ```gdscript
 func _apply_gravity(delta: float) -> void:
@@ -335,11 +443,11 @@ func _apply_gravity(delta: float) -> void:
     velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
 ```
 
-Quando o inimigo aterrissava após o spawn — mesmo uma queda mínima conta — `velocity.y` ficava com um valor pequeno, mas positivo. Em frames de borda, quando `is_on_floor()` oscila entre `true` e `false` por **imprecisão numérica do solver**, a gravidade voltava a somar em cima desse valor. O `move_and_slide` então gerava o quique micro-vertical.
+Quando o inimigo aterrissava após o spawn — mesmo uma queda mínima conta — `velocity.y` ficava pequeno mas positivo. Em frames de borda, quando `is_on_floor()` oscila entre `true` e `false` por **imprecisão numérica do solver**, a gravidade voltava a somar sobre esse valor. O `move_and_slide` gerava o quique.
 
-**Por que o Player não sofria**: por hábito de movimento. O jogador raramente fica parado em borda — ele pula, anda, cai de plataformas — e o `velocity.y` reseta naturalmente como efeito colateral. O inimigo em `PATROL` **fica exatamente em cima do chão por longos períodos**, expondo o bug em sua forma mais pura.
+**Por que o Player não sofria**: por hábito de movimento. O jogador raramente fica parado — pula, anda, cai — e o `velocity.y` reseta naturalmente. O inimigo em `PATROL` **fica sobre o chão por longos períodos**, expondo o bug em forma pura.
 
-**Correção** — trava ativa de `velocity.y` em `_apply_gravity`:
+**Correção** — trava ativa de `velocity.y`:
 
 ```gdscript
 func _apply_gravity(delta: float) -> void:
@@ -349,21 +457,21 @@ func _apply_gravity(delta: float) -> void:
     velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
 ```
 
-Cada frame `on_floor` reseta o eixo Y antes de qualquer física rolar. O loop de feedback `gravity acumula → move_and_slide empurra → is_on_floor flicker → gravity acumula` é cortado na raiz.
+Cada frame `on_floor` reseta o eixo Y antes de qualquer física rodar. O loop `gravity acumula → move_and_slide empurra → is_on_floor flicker → gravity acumula` é cortado na raiz.
 
 ### Bug 2 — *Sanduíche de Colisão* (overlap geométrico no spawn)
 
-**Sintoma**: depois da correção do Jittering, o `MeleeNinja` **ainda vibrava** — mas agora estava travado embaixo da quina esquerda da `PlatformA`, sem conseguir andar pra lugar nenhum.
+**Sintoma**: depois da correção do jittering, o `MeleeNinja` **ainda vibrava** — mas agora travado sob a quina esquerda da `PlatformA`, sem conseguir andar.
 
-**Diagnóstico geométrico**: o spawn original do inimigo estava em `Vector2(-300, 368)`, **exatamente sob o volume da `PlatformA` flutuante**. As caixas de colisão se sobrepunham fisicamente desde o frame 0:
+**Diagnóstico geométrico**: o spawn original estava em `Vector2(-300, 368)`, **exatamente sob o volume da `PlatformA`**. As caixas se sobrepunham desde o frame 0:
 
 | Volume | x range | y range |
 |---|---|---|
-| MeleeNinja shape (em spawn) | `[-324, -276]` | `[272, 368]` |
+| MeleeNinja shape (no spawn) | `[-324, -276]` | `[272, 368]` |
 | PlatformA shape | `[-520, -280]` | `[268, 300]` |
 | **Overlap real** | **`[-324, -280]` (44 px)** | **`[272, 300]` (28 px)** |
 
-O ninja literalmente **nascia com a cabeça enfiada dentro do tijolo da plataforma flutuante**. O engine tentava resolver o overlap pelo menor caminho (28 px vertical para baixo), mas o chão sólido abaixo bloqueava — então tentava o segundo menor caminho (44 px horizontal para a direita), gerando um empurrão constante que conflitava com o `velocity.x` que a IA tentava aplicar.
+O ninja nascia com a cabeça dentro da plataforma. O engine tentava resolver pelo menor caminho (28 px vertical para baixo), mas o chão bloqueava — então tentava o segundo menor (44 px horizontal), gerando um empurrão constante que conflitava com o `velocity.x` da IA.
 
 **Correção dupla**:
 
@@ -374,7 +482,7 @@ O ninja literalmente **nascia com a cabeça enfiada dentro do tijolo da platafor
 + position = Vector2(-150, 368)
 ```
 
-No novo spawn, o shape do inimigo `[-174, -126]` fica a **106 px de clearance** da borda direita da `PlatformA` `[-520, -280]`. **Zero overlap** inicial.
+No novo spawn, o shape do inimigo `[-174, -126]` fica a **106 px de clearance** da borda direita da `PlatformA`. **Zero overlap** inicial.
 
 **2. `floor_snap_length = 12.0`** no `_ready()`:
 
@@ -386,9 +494,9 @@ func _ready() -> void:
     ...
 ```
 
-Essa propriedade nativa do `CharacterBody2D` força o engine a buscar ativamente o chão em um raio de **12 px abaixo do corpo** após cada `move_and_slide()`. Mesmo se a IA mais tarde caminhar para baixo da `PlatformA` durante o PATROL (e o head do inimigo tocar a parte de baixo da plataforma), o snap empurra o corpo de volta pro chão — sem permitir que o engine resolva o overlap empurrando o ninja pra cima.
+Essa propriedade nativa força o engine a buscar ativamente o chão num raio de **12 px** após cada `move_and_slide()`. Mesmo se a IA caminhar sob a `PlatformA` durante o PATROL, o snap empurra o corpo de volta ao chão — sem permitir que o engine resolva o overlap empurrando o ninja para cima.
 
-A combinação das duas correções — **geometria limpa no spawn** + **snap defensivo contínuo** — eliminou completamente o sanduíche.
+A combinação — **geometria limpa no spawn** + **snap defensivo contínuo** — eliminou o sanduíche.
 
 ---
 
@@ -397,19 +505,21 @@ A combinação das duas correções — **geometria limpa no spawn** + **snap de
 1. Baixe **Godot 4.6+** em [godotengine.org](https://godotengine.org).
 2. Clone este repositório.
 3. No Godot: **Import** → selecione `project.godot`.
-4. **F5** — abre na `scenes/test_stage.tscn` por padrão.
+4. **F5** — abre em `scenes/test_stage.tscn`.
 
 ### Controles
 
-| Ação | Teclado | Gamepad (Xbox / PS) |
-|---|---|---|
-| Mover | ← / → | Analógico esq. / DPad |
-| Pular | ↑ | A / X |
-| Agachar | ↓ | DPad ↓ |
-| Combo leve | **J** | X (Xbox) / □ (PS) |
-| Shuriken | **K** | Y / △ |
-| Rasengan | **O** | B / ○ |
-| Concentrar chakra | Shift Esq. | RT / R2 |
+| Ação | Teclado |
+|---|---|
+| Mover | ← → · A D |
+| Pular | ↑ · W |
+| Agachar | ↓ · S |
+| Combo leve | **J** |
+| Shuriken | **K** |
+| Rasengan | **O** |
+| Concentrar chakra | Shift Esq. |
+
+> Há um mapeamento de gamepad configurado no Input Map (analógico/DPad, A, X, Y, B e gatilho direito). **Ainda não validado em hardware** — por isso não consta como suporte oferecido.
 
 ---
 
@@ -417,28 +527,38 @@ A combinação das duas correções — **geometria limpa no spawn** + **snap de
 
 ```
 naruto-game/
-├── project.godot                      # config Godot + Input Map + layers
-├── README.md                          # este arquivo
-├── .gitignore                         # blindagem de artefatos locais
-├── documentation/
-│   └── prints/                        # capturas usadas neste README
+├── project.godot                  # config, Input Map, layers, autoloads
+├── README.md · CLAUDE.md          # vitrine · governança do projeto
+├── contexto.md · decisoes.md      # estado atual · decisões de design fechadas
+├── Changelog.md · SUGESTOES.md    # histórico de mudanças · backlog
+├── icon.svg
+├── assets/
+│   ├── audio/                     # Zabuza_laugh.wav
+│   ├── backgrounds/               # Vila_da_folha + akatsuki/ + ichiraku/
+│   └── sprites/                   # Naruto_chakra_charge + naruto/ (13 sprites + alternates/)
+├── levels/
+│   ├── zona_2_casa_central.tscn
+│   └── floresta_da_nevoa.tscn     # placeholder da Zona 5
 ├── scenes/
-│   ├── test_stage.tscn                # cena principal de teste
-│   ├── player/player.tscn             # CharacterBody2D + hitboxes + camera
-│   └── entities/
-│       ├── dummy.tscn                 # alvo passivo
-│       ├── melee_ninja.tscn           # inimigo com IA
-│       └── shuriken.tscn              # projétil
-└── scripts/
-    ├── player/player_controller.gd
-    ├── components/
-    │   ├── hitbox.gd                  # Area2D ofensivo reusável
-    │   └── hurtbox.gd                 # Area2D defensivo reusável
-    ├── entities/
-    │   ├── dummy.gd
-    │   ├── melee_ninja.gd
-    │   └── shuriken.gd
-    └── ui/debug_hud.gd
+│   ├── test_stage.tscn            # arena de teste (cena principal)
+│   ├── player/                    # player.tscn
+│   ├── entities/                  # dummy · melee_ninja · shuriken · zabuza
+│   ├── components/                # dialogue_trigger · fade_transition · rasengan_balloon
+│   ├── cutscenes/                 # ichiraku · akatsuki_hideout
+│   └── ui/                        # debug_hud · dialogue_box
+├── scripts/
+│   ├── player/                    # player_controller.gd
+│   ├── entities/                  # dummy · melee_ninja · shuriken · zabuza
+│   ├── components/                # hitbox · hurtbox · dialogue_trigger · fade_transition
+│   │                              #   kamui_trigger · rasengan_balloon
+│   ├── cutscenes/                 # ichiraku · akatsuki_hideout
+│   ├── systems/                   # level_manager · dialogue_manager · save_system
+│   ├── debug/                     # debug_zone_switch
+│   └── ui/                        # debug_hud · dialogue_box
+├── documentation/
+│   ├── capturas/                  # imagens usadas neste README
+│   └── produto/                   # documentos de escopo e metodologia
+└── docs/                          # resumos de sessão
 ```
 
 ---

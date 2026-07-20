@@ -7,7 +7,8 @@ Decisões de design em `decisoes.md`. Histórico por sessão em `docs/`.
 
 ## Stack
 - GDScript · 2D platformer. Alvo de distribuição e config de display: ver `decisoes.md`.
-- Input: teclado (WASD/Setas + J/K/O/Shift) — sem suporte a controle.
+- Input: teclado (WASD/Setas + J/K/O/Shift) — validado. Gamepad mapeado no Input Map
+  (analógico/DPad, A, X, Y, B, gatilho direito), porém **nunca testado em hardware**.
 
 ## Input Map
 | Ação | Teclado |
@@ -57,7 +58,8 @@ Decisões de design em `decisoes.md`. Histórico por sessão em `docs/`.
 - Saída do Ichiraku reposiciona o Player em `(-600,0)` (placeholder Zona 4); sem Zona 4 cai no test_stage.
 - `jiraiya_intro` re-dispara a cada respawn (`one_shot` não persiste) — resolver com flag no SaveSystem.
 - Ao construir a Zona 4, mover a fala `Jiraiya: "Entra aí, garoto."` para trigger no corredor.
-- `README.md` da raiz defasado (controles H/J/L, status "Semana 1") — atualizar.
+- Validar o mapeamento de gamepad quando houver controle disponível — os binds existem
+  no `project.godot` mas nunca foram exercitados.
 
 ## Próximos passos (Sessão 12)
 1. Análise de render do Player — mapear os 12 estados da FSM e como cada sprite é montado (pré-requisito p/ integrar os 13 sprites).
