@@ -130,7 +130,7 @@ Com max 100, a barra cheia comporta **1 Rasengan + 0.75 shuriken**, OU **2 shuri
 
 ## ⚔️ Dinâmica de Combate em Ação (Exemplo Prático)
 
-![Execução e Queda na Kill Zone](documentation/Precip%C3%ADcio_Hud.png)
+![Execução e Queda na Kill Zone](documentation/capturas/Precip%C3%ADcio_Hud.png)
 *Legenda: O MeleeNinja aplicando um golpe na beira do precipício, ativando o hitstun do Player e resultando em queda livre em direção à kill zone.*
 
 Este frame congela o instante em que **todos os subsistemas cooperam sem nenhum scripting específico** pra produzir uma situação emergente. O MeleeNinja perseguiu o Player até a borda do mapa em CHASE, entrou na fase `active` do ATTACK, e a hitbox conectou. O `_take_damage()` no `PlayerController` então executou a única linha que define o resultado dramático:
@@ -150,12 +150,12 @@ O ponto técnico importante é que **o knockback não é decorativo — ele é g
 
 Os três frames abaixo mapeiam o ciclo completo da máquina de estados e do `DebugHUD` reativo durante o pipeline de dano. Toda label do HUD é atualizada via signals (`state_changed`, `health_changed`, `chakra_changed`) — **zero polling por frame** — e o `_ready()` da HUD inclui guardas defensivas contra `null instance` + sincronização manual dos valores iniciais. Mesmo após o reload completo da árvore (`reload_current_scene()`), o painel reinicializa sem warnings no console.
 
-![HUD Sincronizado](documentation/02_hud_inicial.png)
+![HUD Sincronizado](documentation/capturas/02_hud_inicial.png)
 *Legenda: Estado inicial IDLE com DebugHUD sincronizado e blindado (Vida 5/5).*
 
 O frame inicial mostra o HUD em seu estado canônico imediatamente após o `_ready()` do `DebugHUD`. O nó `_player` é resolvido via `get_node_or_null(player_path) as PlayerController`, os três signals do `PlayerController` são conectados, e os handlers `_on_state_changed`, `_on_health_changed` e `_on_chakra_changed` são invocados **manualmente** com os valores iniciais do Player — garantindo sincronia mesmo que a primeira emissão de signal já tenha ocorrido antes do `connect()`. Se o `player_path` retornar `null` por qualquer motivo (ordem de `_ready` invertida, cena ainda carregando, refactor futuro de hierarquia), o `push_warning` dispara, as três labels exibem o fallback `"—"`, e a HUD permanece visível em vez de quebrar a cena inteira.
 
-![Naruto no Estado HURT](documentation/03_player_hurt.png)
+![Naruto no Estado HURT](documentation/capturas/03_player_hurt.png)
 *Legenda: Pipeline de dano em ação. Naruto no estado HURT sofrendo o tranco horizontal (Vida 4/5).*
 
 O pipeline `Hitbox → Hurtbox → take_hit → _on_hit_taken → _take_damage → _change_state(HURT)` acabou de fechar. A transição emite simultaneamente:
@@ -165,7 +165,7 @@ O pipeline `Hitbox → Hurtbox → take_hit → _on_hit_taken → _take_damage �
 
 Internamente, o `_enter_state(HURT)` setou `_state_timer = hurt_stun_duration (0.4s)` e `_invulnerability_timer = invulnerability_duration (0.8s)`, desligou as hitboxes ofensivas do Player (defesa contra hit mid-attack que deixaria um swing órfão), e o knockback horizontal aplicado em `_take_damage` está decaindo pela friction natural. **Nenhum input é lido durante o estado** — o `_state_hurt(delta)` chama apenas `_apply_horizontal_movement(delta, 0.0)`, sem nenhum dos helpers `_try_start_*`. O bloqueio de comandos é uma propriedade emergente da própria FSM, não uma flag manual.
 
-![Estado de Morte do Player](documentation/04_player_death.png)
+![Estado de Morte do Player](documentation/capturas/04_player_death.png)
 *Legenda: Naruto no estado DEATH (HP: 0/5) iniciando o freeze de 1.5s antes do reload completo da engine.*
 
 A vida zerou. O `_take_damage` detectou `current_health <= 0` **antes** de aplicar o knockback (early-return que curto-circuita pra evitar o tranco visualmente "engolido" pela morte) e chamou `_change_state(State.DEATH)`. O `_enter_state(DEATH)` zerou `velocity`, setou `_state_timer = death_respawn_delay (1.5s)`, desligou as hitboxes do Player, emitiu o signal `player_died` (gancho pra futuros sistemas de áudio/VFX de game over) e travou input. O `_state_death(delta)` está rodando agora: friction decai qualquer velocity residual, timer conta regressivamente. Quando chegar a zero, `_respawn()` é chamado e dispara `get_tree().reload_current_scene()` — **toda a fase rebuilda do zero**: MeleeNinja, Dummy, plataformas, signals, HUD. O Player que aparece em seguida é uma instância nova, com signals limpos conectados em ordem natural pelo `_ready()` da nova HUD.
