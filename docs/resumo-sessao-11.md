@@ -55,3 +55,86 @@ do naruto-game são consequência direta dela.
   existia à época e o histórico não permite reconstruir a divisão.
 - **Renumeração:** o heading "Próximo bloco — Sessão 10" (trabalho futuro rotulado com
   número já consumido) virou "Próximos passos (Sessão 12)".
+
+## Continuação — 20/07/2026
+
+**Commits:** `903175f`, `f368545` (ambos publicados no mesmo push)
+
+Nota de numeração: o trabalho de 20/07 é **continuação desta sessão**, não uma Sessão 12.
+A numeração do projeto segue blocos de trabalho, não datas (a Sessão 10 se espalhou por
+02–03/07). O "Próximos passos (Sessão 12)" do `contexto.md` segue válido — é trabalho que
+ainda não começou.
+
+### Auditoria read-only do repo
+
+Varredura de README, `documentation/` × `docs/`, raiz e estrutura interna. Achados:
+
+- 6 defasagens no README (detalhadas adiante).
+- `documentation/` operando como catch-all: mídia de validação, docs de produto e legado
+  misturados; nomes `docs/` e `documentation/` quase sinônimos para conteúdos distintos.
+- ~9 MB de mídia não referenciada nem pelo README nem pelo código.
+- **Case-mismatch no git:** o índice tinha `documentation/Zabuza.png` e `Zabuza_melee.png`
+  com Z maiúsculo enquanto o disco mostrava minúsculo — invisível no Windows
+  (case-insensitive), apareceria como arquivo duplicado/ausente em clone Linux.
+  Normalizado durante o move.
+
+### Capturas novas
+
+6 imagens do jogo em execução, extraídas de sessão de gameplay: `rasengan`, `shuriken`,
+`hit-feedback`, `wall-slide`, `dash`, `dialogo-ichiraku`. Chegaram com extensão duplicada
+(`.png.png`) — renomeadas antes de entrar no versionamento.
+
+### Reorganização de `documentation/` (`903175f`)
+
+- Criadas `documentation/capturas/` (15 imagens) e `documentation/produto/` (7 documentos).
+- 5 mídias históricas externalizadas para `naruto-game-assets-brutos/capturas-historicas/`
+  (~7,9 MB): `teste1.mp4`, `Teste2.mp4`, `Teste1.png`, `Wall_slide.png`, `dash_hud.png`.
+- `documentation/README.md` (órfão da Semana 1) removido.
+- Os 4 links de imagem do README atualizados **no mesmo commit** — mover sem corrigir
+  deixaria a vitrine pública com imagem quebrada até a reescrita.
+- FATO registrado: externalizar **não** reduz o tamanho do repo (os blobs permanecem na
+  história do git); o ganho é organização, não peso.
+
+### README reescrito (`f368545`)
+
+Seis defasagens corrigidas:
+
+1. **Renderer** — `gl_compatibility`, não "Forward Plus + Jolt Physics". (Jolt é
+   `3d/physics_engine`, inerte num jogo 2D; saiu da apresentação.)
+2. **Teclas do chakra** — Shuriken **K**, Rasengan **O**. A tabela dizia J e L, e a tecla
+   L não existe no Input Map.
+3. **FSM do Player** — 12 estados (lidos do `enum State`), não 8.
+4. **Estrutura de pastas** — reconstruída a partir do disco real.
+5. **Collision layers (§2 e §4)** — Player é layer 8 (`player_body`), MeleeNinja é layer 7
+   (`enemy_body`), e a `DetectionArea` mascara a layer 8. O texto dizia "layer 1 (world)"
+   e justificava a ausência de uma layer dedicada que, na prática, já existia.
+6. **Gamepad** — ver decisão abaixo.
+
+Adicionado: seção da camada narrativa (DialogueSystem, cutscenes, LevelManager,
+SaveSystem, boss Zabuza, as 5 zonas), seção "Status" honesta (2 zonas em placeholder,
+3 não criadas, 13 sprites não integrados à FSM) e as capturas distribuídas com
+enquadramento explícito de arena de teste. Preservados íntegros: arquitetura, mecânicas de
+combate, FSM do inimigo, pulo preditivo e o post-mortem de bugs.
+
+### Decisão — gamepad: implementado, não validado
+
+FATO: o `project.godot` tem mapeamento de joypad nas **8 ações** (analógico/DPad, A, X, Y,
+B, gatilho direito), enquanto o `contexto.md` afirmava "sem suporte a controle". O Gomes
+não tem controle e nunca testou.
+
+Decidido: os binds **permanecem** no `project.godot`; o README registra como "configurado
+no Input Map, ainda não validado em hardware"; o `contexto.md` foi corrigido e a validação
+virou pendência aberta. **Suporte não verificado não se anuncia como feature em vitrine
+pública.**
+
+### Método — parar ao encontrar contradição
+
+O handoff do Chat instruiu remover a tabela de gamepad afirmando que "o `project.godot`
+não tem ações de joypad", e atribuiu a `decisoes.md` uma frase que na verdade estava no
+`contexto.md`. O Executor verificou o disco antes de escrever, encontrou os binds, **parou
+e reportou** em vez de obedecer.
+
+Obedecer teria produzido o pior resultado: um README **omitindo** um mapeamento que existe
+e funciona, com o `project.godot` seguindo cheio de binds — a defasagem mudaria de lugar
+em vez de sumir. A regra "confirmar em disco antes de afirmar" foi o que separou instrução
+de fato.
