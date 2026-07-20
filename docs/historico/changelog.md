@@ -2,7 +2,7 @@
 
 Toda alteração relevante na estrutura do projeto, correções de bugs e adições de mecânicas são registradas de forma transparente neste documento.
 
-> O estado atual vive em `contexto.md`; o histórico detalhado sessão a sessão (commits, decisões, pendências), em `docs/resumo-sessao-N.md`.
+> O estado atual vive em `../contexto.md`; o histórico detalhado sessão a sessão (commits, decisões, pendências), em `resumo-sessao-N.md`.
 
 ---
 

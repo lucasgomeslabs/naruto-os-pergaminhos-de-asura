@@ -15,7 +15,7 @@ vivem em `C:\Projetos\projetos-pessoais\projetos-pessoais-operacoes\`:
 
 ## Projeto
 
-Godot 4.6 · GDScript · 2D platformer. Estado atual em `contexto.md`; decisões de design em `decisoes.md`; histórico por sessão em `docs/`.
+Godot 4.6 · GDScript · 2D platformer. Estado atual em `docs/contexto.md`; decisões de design em `docs/decisoes.md`; histórico (changelog + resumos de sessão) em `docs/historico/`.
 
 ## Específico do game
 
@@ -35,4 +35,4 @@ os gates de commit/push do `code.md`.
 
 ### Comando
 
-- `#lista` → exibe o backlog de sugestões (`SUGESTOES.md`).
+- `#lista` → exibe o backlog de sugestões (`docs/backlog.md`).

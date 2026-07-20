@@ -2,8 +2,8 @@
 
 **Engine:** Godot 4.6 · **Branch:** main · **Repo:** lucasgomeslabs/naruto-os-pergaminhos-de-asura
 
-Estado conceitual do projeto (onde estamos agora). Governança em `CLAUDE.md`.
-Decisões de design em `decisoes.md`. Histórico por sessão em `docs/`.
+Estado conceitual do projeto (onde estamos agora). Governança em `../CLAUDE.md`.
+Decisões de design em `decisoes.md`. Histórico por sessão em `historico/`.
 
 ## Stack
 - GDScript · 2D platformer. Alvo de distribuição e config de display: ver `decisoes.md`.
@@ -66,6 +66,6 @@ Decisões de design em `decisoes.md`. Histórico por sessão em `docs/`.
 2. Rewrite da cutscene Akatsuki 2→3 frames + sync `KamuiTrigger` + aposentar `guedomazo_naruto2/3` — junto com a Zona 5.
 3. Padronizar canvas + pivô dos sprites antes de animar.
 
-### Backlog (ver SUGESTOES.md)
+### Backlog (ver `backlog.md`)
 - TutorialTrigger Zona 2 (#07).
 - CollectibleSystem (#02–#06).

@@ -1,7 +1,7 @@
 # decisoes.md — Decisões de design fechadas
 
 Decisões de design e técnicas já fechadas do naruto-game. Estado atual em `contexto.md`;
-histórico em `docs/`.
+histórico em `historico/`.
 
 ## Distribuição e display
 - Alvo: PC + Android + Web. Renderer **Compatibility**. Ship **720p 16:9** (1280×720),

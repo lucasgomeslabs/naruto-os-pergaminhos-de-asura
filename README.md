@@ -79,10 +79,10 @@ Cada par ofensivo/defensivo enxerga apenas o seu oposto: a hitbox do Player masc
 
 `IDLE · MOVE · JUMP · FALL · CROUCH · DASH · WALL_SLIDE · ATTACK · SPECIAL · CHAKRA_CHARGE · HURT · DEATH`
 
-![Estado WALL_SLIDE](documentation/capturas/wall-slide.png)
+![Estado WALL_SLIDE](docs/capturas/wall-slide.png)
 *Arena de teste — estado `WALL_SLIDE`: gravidade reduzida ao segurar a direção contra a parede, com recarga do double jump e wall jump disponível.*
 
-![Estado DASH](documentation/capturas/dash.png)
+![Estado DASH](docs/capturas/dash.png)
 *Arena de teste — estado `DASH`, disparado por double-tap na direção: override horizontal, i-frames e gravidade suspensa durante a janela.*
 
 ### Responsabilidades por script
@@ -115,7 +115,7 @@ O combo opera dentro de uma **cancel window** definida pelo último 25% da dura�
 
 A FSM faz `_exit_state(State.ATTACK)` + `_enter_state(State.ATTACK)` manualmente, **sem** passar pelo `_change_state` (que bloqueia transições mesmo→mesmo), reciclando hitbox, signals `attack_started`/`attack_ended` e o `_state_timer`.
 
-![Dano aplicado no inimigo](documentation/capturas/hit-feedback.png)
+![Dano aplicado no inimigo](docs/capturas/hit-feedback.png)
 *Arena de teste — hit conectado: a barra de vida do MeleeNinja recua e o feedback de impacto dispara. O pipeline `Hitbox → Hurtbox → take_hit → hit_taken` fecha em um frame.*
 
 ### Shuriken (**K**) — projétil físico com alcance limitado
@@ -132,7 +132,7 @@ A FSM faz `_exit_state(State.ATTACK)` + `_enter_state(State.ATTACK)` manualmente
 
 A direção é setada por `direction = Vector2(facing_direction, 0)` **antes** de adicionar à árvore — garantindo que o `_physics_process` do projétil já comece com o vetor correto.
 
-![Shuriken em voo](documentation/capturas/shuriken.png)
+![Shuriken em voo](docs/capturas/shuriken.png)
 *Arena de teste — shuriken em trajetória, com o chakra em 62% após o custo de 40 ser debitado.*
 
 ### Rasengan (**O**) — special com dash melee
@@ -146,7 +146,7 @@ O `State.SPECIAL` aplica um impulso `velocity.x = 1300 * facing_direction` no `_
 | Dash inicial | 1300 px/s |
 | Alcance total efetivo | ~360 px |
 
-![Rasengan em execução](documentation/capturas/rasengan.png)
+![Rasengan em execução](docs/capturas/rasengan.png)
 *Arena de teste — `SPECIAL` executado: o chakra caiu para 21% (custo 70) e o `RasengaBalloon` acompanha o Player em world-space, não em screen-space.*
 
 ### Gerenciamento dinâmico de Chakra
@@ -166,7 +166,7 @@ Com máximo 100, a barra cheia comporta **1 Rasengan + 0.75 shuriken**, OU **2 s
 
 ## Dinâmica de Combate em Ação
 
-![Execução e Queda na Kill Zone](documentation/capturas/Precip%C3%ADcio_Hud.png)
+![Execução e Queda na Kill Zone](docs/capturas/Precip%C3%ADcio_Hud.png)
 *Arena de teste — o MeleeNinja golpeia na beira do precipício, ativando o hitstun e resultando em queda livre até a kill zone.*
 
 Este frame congela o instante em que **todos os subsistemas cooperam sem nenhum scripting específico** para produzir uma situação emergente. O MeleeNinja perseguiu o Player até a borda em CHASE, entrou na fase `active` do ATTACK, e a hitbox conectou. O `_take_damage()` então executou a linha que define o resultado:
@@ -186,12 +186,12 @@ O ponto técnico é que **o knockback não é decorativo — ele é geográfico*
 
 Os três frames abaixo mapeiam o ciclo completo da máquina de estados e do `DebugHUD` reativo durante o pipeline de dano. Toda label é atualizada via signals (`state_changed`, `health_changed`, `chakra_changed`) — **zero polling por frame** — e o `_ready()` inclui guardas defensivas contra `null instance` + sincronização manual dos valores iniciais. Mesmo após o reload completo da árvore, o painel reinicializa sem warnings no console.
 
-![HUD Sincronizado](documentation/capturas/02_hud_inicial.png)
+![HUD Sincronizado](docs/capturas/02_hud_inicial.png)
 *Arena de teste — estado inicial IDLE com o DebugHUD sincronizado e blindado (Vida 5/5).*
 
 O frame mostra o HUD em seu estado canônico após o `_ready()`. Os signals do `PlayerController` são conectados e os handlers `_on_state_changed`, `_on_health_changed` e `_on_chakra_changed` são invocados **manualmente** com os valores iniciais — garantindo sincronia mesmo que a primeira emissão tenha ocorrido antes do `connect()`. Se a referência do Player retornar `null` (ordem de `_ready` invertida, cena carregando, refactor de hierarquia), o `push_warning` dispara, as labels exibem o fallback `"—"`, e a HUD permanece visível em vez de quebrar a cena.
 
-![Naruto no Estado HURT](documentation/capturas/03_player_hurt.png)
+![Naruto no Estado HURT](docs/capturas/03_player_hurt.png)
 *Arena de teste — pipeline de dano em ação: Naruto em HURT sofrendo o tranco horizontal (Vida 4/5).*
 
 O pipeline `Hitbox → Hurtbox → take_hit → _on_hit_taken → _take_damage → _change_state(HURT)` acabou de fechar. A transição emite simultaneamente:
@@ -201,7 +201,7 @@ O pipeline `Hitbox → Hurtbox → take_hit → _on_hit_taken → _take_damage �
 
 Internamente, `_enter_state(HURT)` setou `_state_timer = hurt_stun_duration (0.4s)` e `_invulnerability_timer = invulnerability_duration (0.8s)`, desligou as hitboxes ofensivas (defesa contra hit mid-attack que deixaria um swing órfão), e o knockback decai pela friction. **Nenhum input é lido durante o estado** — `_state_hurt(delta)` chama apenas `_apply_horizontal_movement(delta, 0.0)`. O bloqueio de comandos é propriedade emergente da FSM, não uma flag manual.
 
-![Estado de Morte do Player](documentation/capturas/04_player_death.png)
+![Estado de Morte do Player](docs/capturas/04_player_death.png)
 *Arena de teste — Naruto em DEATH (HP 0/5), iniciando o freeze de 1.5s antes do reload.*
 
 A vida zerou. O `_take_damage` detectou `current_health <= 0` **antes** de aplicar o knockback (early-return que evita o tranco visualmente "engolido" pela morte) e chamou `_change_state(State.DEATH)`. O `_enter_state(DEATH)` zerou `velocity`, setou `_state_timer = death_respawn_delay (1.5s)`, desligou as hitboxes, emitiu `player_died` (gancho para áudio/VFX futuros) e travou input. Quando o timer zera, `_respawn()` dispara `get_tree().reload_current_scene()` — **a fase inteira rebuilda**: MeleeNinja, Dummy, plataformas, signals, HUD.
@@ -389,7 +389,7 @@ As cutscenes reagem ao signal `DialogueManager.line_advanced(index)` para **troc
 - **Ichiraku** — integrada e testada. É uma **sub-scene da Zona 4**, não um `change_scene_to_file`: o Player permanece na árvore, preservando estado.
 - **Akatsuki** — integrada. Abre com o frame A (Pain, mão na cabeça) e troca para o frame B na segunda linha. Um rewrite para 3 beats (intro → facepalm → kamui) está planejado junto com a construção da Zona 5.
 
-![Cutscene do Ichiraku](documentation/capturas/dialogo-ichiraku.png)
+![Cutscene do Ichiraku](docs/capturas/dialogo-ichiraku.png)
 *Arte final — cutscene do Ichiraku com a `DialogueBox` em estilo mangá e a borda colorida identificando quem fala. Diferente das capturas anteriores, aqui não há placeholder: é o alvo visual do projeto (arte desenhada / cel-shaded).*
 
 ### Componentes de transição
@@ -402,10 +402,10 @@ As cutscenes reagem ao signal `DialogueManager.line_advanced(index)` para **troc
 
 `zabuza.gd` implementa o `BossController` com FSM de **9 estados**, seguindo o mesmo padrão enum-based + signals do inimigo comum.
 
-![Boss Zabuza](documentation/capturas/zabuza.png)
+![Boss Zabuza](docs/capturas/zabuza.png)
 *Arena de teste — o boss Zabuza. Como o restante do combate, a FSM foi construída e validada sobre formas primitivas antes de qualquer arte.*
 
-![Zabuza em ataque melee](documentation/capturas/zabuza_melee.png)
+![Zabuza em ataque melee](docs/capturas/zabuza_melee.png)
 *Arena de teste — fase de ataque melee do boss.*
 
 ### Persistência
@@ -528,9 +528,8 @@ A combinação — **geometria limpa no spawn** + **snap defensivo contínuo** �
 ```
 naruto-game/
 ├── project.godot                  # config, Input Map, layers, autoloads
-├── README.md · CLAUDE.md          # vitrine · governança do projeto
-├── contexto.md · decisoes.md      # estado atual · decisões de design fechadas
-├── Changelog.md · SUGESTOES.md    # histórico de mudanças · backlog
+├── README.md                      # vitrine (este arquivo)
+├── CLAUDE.md                      # governança do projeto
 ├── icon.svg
 ├── assets/
 │   ├── audio/                     # Zabuza_laugh.wav
@@ -555,10 +554,13 @@ naruto-game/
 │   ├── systems/                   # level_manager · dialogue_manager · save_system
 │   ├── debug/                     # debug_zone_switch
 │   └── ui/                        # debug_hud · dialogue_box
-├── documentation/
-│   ├── capturas/                  # imagens usadas neste README
-│   └── produto/                   # documentos de escopo e metodologia
-└── docs/                          # resumos de sessão
+└── docs/
+    ├── contexto.md                # onde o projeto está agora
+    ├── decisoes.md                # decisões de design fechadas
+    ├── backlog.md                 # sugestões e features futuras
+    ├── historico/                 # changelog + resumos de sessão
+    ├── capturas/                  # imagens usadas neste README
+    └── produto/                   # documentos de escopo e metodologia
 ```
 
 ---
