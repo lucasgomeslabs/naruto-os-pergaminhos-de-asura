@@ -60,6 +60,11 @@ Decisões de design em `decisoes.md`. Histórico por sessão em `historico/`.
 - Ao construir a Zona 4, mover a fala `Jiraiya: "Entra aí, garoto."` para trigger no corredor.
 - Validar o mapeamento de gamepad quando houver controle disponível — os binds existem
   no `project.godot` mas nunca foram exercitados.
+- `docs/produto/combate-ia-writeup.md` — 2 links quebrados para `documentation/` (L11,
+  L112) e documento inteiro defasado (abre com "Core Gameplay da Semana 1 finalizado").
+  Decidir: atualizar, arquivar ou remover — não consertar link isolado em doc obsoleto.
+- Repo no GitHub sem descrição, sem topics e sem About — é público e serve de vitrine;
+  são esses campos que o tornam encontrável e compreensível em poucos segundos.
 
 ## Próximos passos (Sessão 12)
 1. Análise de render do Player — mapear os 12 estados da FSM e como cada sprite é montado (pré-requisito p/ integrar os 13 sprites).

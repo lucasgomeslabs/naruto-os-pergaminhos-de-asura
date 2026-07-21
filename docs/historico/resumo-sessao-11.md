@@ -138,3 +138,26 @@ Obedecer teria produzido o pior resultado: um README **omitindo** um mapeamento 
 e funciona, com o `project.godot` seguindo cheio de binds — a defasagem mudaria de lugar
 em vez de sumir. A regra "confirmar em disco antes de afirmar" foi o que separou instrução
 de fato.
+
+### Consolidação sob `docs/` e limpeza da raiz (`0577182`)
+
+- 34 renames; `documentation/` deixou de existir. A raiz saiu de 6 `.md` soltos para **2** —
+  `README.md` e `CLAUDE.md`, ambos por restrição técnica (GitHub e Claude Code só os
+  carregam da raiz).
+- Estrutura final: `docs/` com `contexto.md`, `decisoes.md` e `backlog.md` na raiz;
+  `historico/` (changelog + 8 resumos de sessão); `capturas/` (15 imagens); `produto/`
+  (7 documentos).
+- Renomeações: `SUGESTOES.md` → `backlog.md` e `Changelog.md` → `changelog.md` —
+  minúsculas e nome que diz o que é.
+
+**Ponteiros atualizados no mesmo commit:** os 12 links de imagem do README, a árvore de
+pastas do README, `CLAUDE.md`, `contexto.md`, `decisoes.md`, `changelog.md`, e a regra do
+`.gitignore` (`documentation/**/*.import` → `docs/**/*.import`, para os `.import` que o
+Godot regenera no novo caminho). Mover sem corrigir deixaria a vitrine pública com imagem
+quebrada.
+
+**Decisão — comentários em código não foram tocados:** 4 comentários em `.tscn`/`.gd`
+citam `SUGESTOES.md` (`levels/zona_2_casa_central.tscn`, `scenes/cutscenes/akatsuki_hideout.tscn`,
+`scripts/cutscenes/akatsuki_hideout.gd`, `scripts/cutscenes/ichiraku.gd`). Citam o documento
+pelo **nome + número do item**, não por caminho — continuam resolvendo por busca. Editar
+2 cenas e 2 scripts numa reorganização de docs ampliaria o risco sem ganho.
